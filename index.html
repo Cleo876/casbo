@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>C.A.S.B.O | The Initiative</title>
+    <meta name="title" content="C.A.S.B.O | The Initiative">
+    <meta name="description" content="An exclusive initiative by Final Render Animation Studio & Forge, granting targeted, studio-grade evolutions to exceptional small businesses.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cleo876.github.io/casbo/">
+    <meta property="og:title" content="C.A.S.B.O | The Initiative">
+    <meta property="og:description" content="Elevating the Ambitious. A mark of distinction and technological evolution.">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://cleo876.github.io/casbo/">
+    <meta property="twitter:title" content="C.A.S.B.O | The Initiative">
+    <meta property="twitter:description" content="Elevating the Ambitious. A mark of distinction and technological evolution.">
+
+    <!-- SEO & Indexing Optimizations -->
+    <meta name="keywords" content="CASBO, Final Render Animation Studio, FRAS, Forge, small business assistance, pro bono creative services, tech philanthropy, technological evolution, business grant, Jamaica">
+    <meta name="author" content="Final Render Animation Studio (F.R.A.S) & Forge">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cleo876.github.io/casbo/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Added Arvo font and ensured bold weights are loaded for Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        casbo: {
+                            accent: '#666666',
+                            bg: '#030303',
+                            surface: '#0a0a0a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        arvo: ['Arvo', 'serif'], // Added Arvo to Tailwind
+                    },
+                    animation: {
+                        'aurora': 'aurora 20s linear infinite',
+                        'fade-in': 'fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        aurora: {
+                            '0%, 100%': { transform: 'translate(0, 0) scale(1) rotate(0deg)' },
+                            '33%': { transform: 'translate(5%, -5%) scale(1.05) rotate(2deg)' },
+                            '66%': { transform: 'translate(-5%, 5%) scale(0.95) rotate(-2deg)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Minimalist scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030303; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #666666; 
+        }
+
+        /* Vibrant but highly controlled atmospheric glows */
+        .vibrancy-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            mix-blend-screen: screen;
+        }
+
+        .glow-blue {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(14,165,233,0.8) 0%, rgba(0,0,0,0) 70%);
+        }
+
+        .glow-purple {
+            bottom: -20%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: -10s;
+        }
+
+        .laurel-reveal {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: laurelReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes laurelReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Typography utilities */
+        .text-balance {
+            text-wrap: balance;
+        }
+        
+        .tracking-tightest {
+            letter-spacing: -0.04em;
+        }
+
+        /* Ensure bold tags pop against the light gray paragraph text */
+        b, strong {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Custom selection */
+        ::selection {
+            background: #ffffff;
+            color: #000000;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <div class="vibrancy-layer">
+        <div class="glow-orb glow-blue animate-aurora"></div>
+        <div class="glow-orb glow-purple animate-aurora"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 mix-blend-difference">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12">
+            <div class="flex justify-between items-center h-24">
+                <a href="/" class="flex items-center gap-3 group">
+                    <div 
+                        class="w-8 h-8 mix-blend-screen pointer-events-none select-none transition-transform group-hover:scale-105 duration-500"
+                        style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                        oncontextmenu="return false;"
+                        ondragstart="return false;"
+                        aria-label="C.A.S.B.O Laurel Emblem"
+                        role="img"
+                    ></div>
+                    <span class="font-display text-xl font-bold tracking-widest uppercase">C.A.S.B.O</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <!-- Link points to the future dedicated ledger page -->
+                    <a href="ledger.html" class="font-display text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors duration-300">The Ledger</a>
+                    <a href="#" class="font-display text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors duration-300">F.R.A.S Studio</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative min-h-screen flex flex-col justify-center px-6 md:px-12 pt-32 pb-24 z-10">
+        <div class="max-w-screen-2xl mx-auto w-full flex flex-col items-center text-center">
+            
+            <div class="laurel-reveal flex flex-col items-center mb-10 w-full max-w-[37rem]">
+                <!-- Image protected via background-image technique and pointer-events-none -->
+                <div 
+                    class="w-full aspect-square md:aspect-[4/3] drop-shadow-2xl mix-blend-screen pointer-events-none select-none"
+                    style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                    oncontextmenu="return false;"
+                    ondragstart="return false;"
+                    aria-label="C.A.S.B.O Laurel Emblem"
+                    role="img"
+                ></div>
+            </div>
+
+            <div class="animate-fade-in flex flex-col items-center" style="animation-delay: 0.4s;">
+                <h2 class="font-arvo text-gray-100 text-sm md:text-base font-normal tracking-[0.25em] md:tracking-[0.3em] uppercase mb-4">
+                    Charitable Assistance for Small Business Owners
+                </h2>
+                <span class="inline-block font-arvo text-white text-xs md:text-sm font-bold tracking-[0.4em] uppercase mb-8">
+                    — C.A.S.B.O —
+                </span>
+
+                <div class="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-6 py-5 md:px-10 md:py-6 mb-16 max-w-[95%] md:max-w-4xl backdrop-blur-sm">
+                    <p class="font-sans text-gray-300 text-sm md:text-base leading-relaxed italic text-center">
+                        &ldquo;C.A.S.B.O is a pro bono initiative by <strong>Final Render Animation Studio</strong> and <strong>Forge</strong>. We are not a registered charity or nonprofit. We do not solicit donations. Services are provided at no cost to selected small businesses. The word &lsquo;charitable&rsquo; reflects our belief in generosity and community support.&rdquo;
+                    </p>
+                </div>
+            </div>
+
+            <h1 class="font-display text-5xl md:text-7xl lg:text-[7rem] leading-[0.95] tracking-tightest font-bold mb-12 animate-fade-in max-w-5xl text-balance" style="animation-delay: 0.6s;">
+                Elevating the Ambitious.
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 animate-fade-in max-w-6xl text-left mt-8" style="animation-delay: 0.8s;">
+                <div>
+                    <h3 class="font-display text-2xl font-medium mb-6">The Initiative</h3>
+                    <p class="text-gray-400 font-light leading-relaxed text-lg mb-6">
+                        <b>C.A.S.B.O</b> is an exclusive, scouted initiative operated jointly by <b>Final Render Animation Studio (F.R.A.S)</b> and <b>Forge</b>. C.A.S.B.O exists to identify small businesses demonstrating exceptional effort, dedication, and a relentless pursuit of professionalism. 
+                    </p>
+                    <p class="text-gray-400 font-light leading-relaxed text-lg">
+                        Once identified, these businesses are granted a studio-grade technological and creative evolution upgrade—completely free of charge. We look at specific operational facets and execute high-impact upgrades to enhance how they handle and represent themselves to the public.
+                    </p>
+                </div>
+
+                <div class="flex flex-col justify-start">
+                    <div class="border-l border-casbo-accent/30 pl-8 mb-10">
+                        <h3 class="font-display text-xl font-medium mb-3">The Selection</h3>
+                        <p class="text-gray-500 text-base font-light leading-relaxed">
+                            <b>C.A.S.B.O status cannot be applied for</b>. It is earned through visible dedication to your craft and scouted by our team. Selected businesses receive focused, month-long engagements designed to push their brand forward.
+                        </p>
+                    </div>
+                    
+                    <div class="border-l border-casbo-accent/30 pl-8">
+                        <h3 class="font-display text-xl font-medium mb-3">The Laurel</h3>
+                        <p class="text-gray-500 text-base font-light leading-relaxed mb-8">
+                            Becoming a C.A.S.B.O recipient grants the business the right to display the official Laurel—a permanent, verifiable testament to their standard of excellence and their induction into this elite roster.
+                        </p>
+                        <a href="ledger.html" class="inline-flex justify-center items-center px-8 py-4 bg-white text-black font-display font-semibold text-xs tracking-[0.2em] uppercase hover:bg-gray-200 transition-colors duration-300">
+                            View All C.A.S.B.O Recipients
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="relative z-10 border-t border-casbo-accent/20 bg-casbo-surface/50 mt-12 md:mt-0">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                
+                <div class="flex items-center gap-4">
+                    <div 
+                        class="w-8 h-8 mix-blend-screen pointer-events-none select-none opacity-60"
+                        style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                        oncontextmenu="return false;"
+                        ondragstart="return false;"
+                        aria-label="C.A.S.B.O Laurel Emblem"
+                        role="img"
+                    ></div>
+                    <span class="font-display text-sm font-bold tracking-widest text-casbo-accent uppercase">C.A.S.B.O</span>
+                </div>
+
+                <div class="text-xs font-light text-gray-600 max-w-xl md:text-right">
+                    <p class="mb-2">A joint initiative operated by Final Render Animation Studio & Forge.</p>
+                    <p>&copy; <span id="year"></span> All rights reserved. This initiative is a private, community-focused endeavor and does not solicit public funding.</p>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Update copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
