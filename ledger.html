@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>C.A.S.B.O | The Official Ledger</title>
+    <meta name="title" content="C.A.S.B.O | The Official Ledger">
+    <meta name="description" content="The official, verifiable directory of C.A.S.B.O. recipients. Explore the small businesses elevated by Final Render Animation Studio & Forge.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cleo876.github.io/casbo/ledger.html">
+    <meta property="og:title" content="C.A.S.B.O | The Official Ledger">
+    <meta property="og:description" content="The verified directory of businesses elevated through the C.A.S.B.O pro bono initiative.">
+    <meta property="og:image" content="https://github.com/Cleo876/casbo/blob/main/imgs/Regular%20Laurel_C.A.S.B.O%20Creation%20Logo.png?raw=true">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="C.A.S.B.O | The Official Ledger">
+    <meta property="twitter:description" content="The verified directory of businesses elevated through the C.A.S.B.O pro bono initiative.">
+    <meta property="twitter:image" content="https://github.com/Cleo876/casbo/blob/main/imgs/Regular%20Laurel_C.A.S.B.O%20Creation%20Logo.png?raw=true">
+
+    <link rel="icon" type="image/png" href="https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        casbo: {
+                            accent: '#666666',
+                            bg: '#030303',
+                            surface: '#0a0a0a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        arvo: ['Arvo', 'serif'],
+                    },
+                    animation: {
+                        'aurora': 'aurora 20s linear infinite',
+                        'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        aurora: {
+                            '0%, 100%': { transform: 'translate(0, 0) scale(1) rotate(0deg)' },
+                            '33%': { transform: 'translate(5%, -5%) scale(1.05) rotate(2deg)' },
+                            '66%': { transform: 'translate(-5%, 5%) scale(0.95) rotate(-2deg)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #666666; border-radius: 10px; }
+
+        .vibrancy-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            mix-blend-screen: screen;
+        }
+
+        .glow-blue {
+            top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(14,165,233,0.8) 0%, rgba(0,0,0,0) 70%);
+        }
+
+        .glow-purple {
+            bottom: -20%; right: -10%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: -10s;
+        }
+
+        /* 
+         * GLOBAL RICH TEXT FORMATTING 
+         * This handles any raw HTML passed through the JSON
+         */
+        .rich-text p { margin-bottom: 1rem; line-height: 1.7; color: #9ca3af; }
+        .rich-text p:last-child { margin-bottom: 0; }
+        .rich-text strong, .rich-text b { color: #ffffff; font-weight: 600; }
+        .rich-text i, .rich-text em { font-style: italic; color: #d1d5db; }
+        .rich-text a { color: #e5e7eb; text-decoration: underline; text-decoration-color: #666666; text-underline-offset: 4px; transition: all 0.3s ease; font-weight: 500; }
+        .rich-text a:hover { color: #ffffff; text-decoration-color: #ffffff; }
+        .rich-text code { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85em; color: #d1d5db; }
+        .rich-text blockquote { border-left: 2px solid #666666; padding-left: 1rem; font-style: italic; color: #9ca3af; margin: 1rem 0; }
+        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #9ca3af; }
+        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #9ca3af; }
+        .rich-text li { margin-bottom: 0.5rem; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+        
+        ::selection { background: #ffffff; color: #000000; }
+        
+        /* Utility for archive inputs */
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <div class="vibrancy-layer">
+        <div class="glow-orb glow-blue animate-aurora"></div>
+        <div class="glow-orb glow-purple animate-aurora"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 mix-blend-difference">
+        <div class="w-full px-6 md:px-8 lg:px-12">
+            <div class="flex justify-between items-center h-24">
+                <a href="index.html" class="flex items-center gap-3 group">
+                    <div 
+                        class="w-8 h-8 mix-blend-screen pointer-events-none select-none transition-transform group-hover:scale-105 duration-500"
+                        style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                        oncontextmenu="return false;"
+                        ondragstart="return false;"
+                        aria-label="C.A.S.B.O Laurel Emblem"
+                        role="img"
+                    ></div>
+                    <span class="font-display text-xl font-bold tracking-widest uppercase text-white">C.A.S.B.O</span>
+                </a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="ledger.html" class="font-display text-xs font-semibold tracking-[0.2em] uppercase text-white transition-colors duration-300">The Ledger</a>
+                    <a href="https://frasmedia.academy/" target="_blank" class="font-display text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors duration-300">F.R.A.S Studio</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative min-h-screen pt-32 pb-24 z-10 px-6 md:px-8 lg:px-12">
+        <div class="max-w-screen-2xl mx-auto w-full">
+            
+            <header class="mb-12 animate-fade-in flex flex-col md:flex-row items-start md:items-end justify-between gap-8 border-b border-white/10 pb-10">
+                <div class="max-w-3xl">
+                    <h2 class="font-arvo text-gray-100 text-sm font-normal tracking-[0.3em] uppercase mb-4">
+                        Directory of Evolution
+                    </h2>
+                    <h1 class="font-display text-5xl md:text-7xl tracking-tight font-bold text-white mb-6">
+                        The Official Ledger.
+                    </h1>
+                    <p class="font-sans text-gray-400 text-lg leading-relaxed max-w-2xl">
+                        The verified record of small businesses scouted and elevated by Final Render Animation Studio & Forge. Every recipient listed here has received a bespoke technological or creative upgrade at zero cost.
+                    </p>
+                </div>
+                
+                <!-- Data Visualization: Scale of Impact -->
+                <div class="flex flex-col items-start md:items-end gap-3">
+                    <div class="flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-3 rounded-full backdrop-blur-sm w-fit">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="font-display text-xs font-semibold tracking-[0.1em] text-gray-300 uppercase">Live Database</span>
+                    </div>
+                    <div class="flex gap-3 text-left md:text-right mt-2">
+                        <div class="glass-card px-4 py-3 rounded-xl border border-white/5">
+                            <span class="block font-mono text-[10px] text-gray-500 tracking-[0.2em] uppercase mb-1">Total Recipients</span>
+                            <span class="font-display text-xl font-bold text-white" id="stat-total">00</span>
+                        </div>
+                        <div class="glass-card px-4 py-3 rounded-xl border border-white/5">
+                            <span class="block font-mono text-[10px] text-gray-500 tracking-[0.2em] uppercase mb-1">Active Evolutions</span>
+                            <span class="font-display text-xl font-bold text-white">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Functional Aesthetics: Archive Controls -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4 animate-fade-in" style="animation-delay: 0.2s">
+                <div class="relative w-full sm:max-w-md">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search archives by name or ID..." class="w-full bg-[#0a0a0a] border border-white/10 rounded-full pl-10 pr-6 py-3 text-sm text-white focus:outline-none focus:border-white/30 transition-colors placeholder-gray-500 glass-card">
+                </div>
+                <div class="flex gap-4 w-full sm:w-auto">
+                    <div class="relative w-full sm:w-auto">
+                        <select id="yearFilter" class="w-full sm:w-auto bg-[#0a0a0a] border border-white/10 rounded-full pl-6 pr-10 py-3 text-sm text-gray-300 focus:outline-none focus:border-white/30 transition-colors appearance-none glass-card cursor-pointer">
+                            <option value="all" class="bg-black text-white">All Years</option>
+                            <!-- Dynamic Years Injected Here -->
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ledger-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Cards will be injected here via JavaScript -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Upgraded Verification Modal -->
+    <div id="verification-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 md:p-6">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-[#0a0a0a] border border-white/10 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[90vh]" id="modal-panel">
+            
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors z-10 bg-black/50 rounded-full p-1 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="bg-white/[0.02] border-b border-white/5 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div class="flex items-center gap-6">
+                    <div id="modal-logo-container" class="shrink-0">
+                        <!-- Logo Injected Here -->
+                    </div>
+                    <div>
+                        <h3 class="font-arvo text-2xl md:text-3xl font-bold text-white mb-2" id="modal-title">Recipient Name</h3>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <code class="font-mono text-casbo-accent tracking-widest text-xs border border-white/10 px-2 py-1 rounded" id="modal-badge-id">CASBO-XXXX</code>
+                            <span class="font-mono text-gray-500 text-xs tracking-widest uppercase" id="modal-date">Month Year</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-8 overflow-y-auto custom-scrollbar">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-5 h-5 mix-blend-screen pointer-events-none select-none opacity-50" style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"></div>
+                    <h4 class="font-display text-sm font-semibold tracking-widest uppercase text-white">Technological Evolution</h4>
+                </div>
+                
+                <!-- Full Rich Text Injected Here -->
+                <div id="modal-description" class="rich-text mb-10 text-base md:text-lg text-gray-300"></div>
+                
+                <div class="w-full bg-green-500/10 border border-green-500/20 text-green-400 px-6 py-4 rounded-xl flex items-center justify-center gap-3 mt-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    <span class="font-display font-semibold tracking-wide uppercase text-sm">Authentic C.A.S.B.O Record Verified</span>
+                </div>
+                
+                <div id="modal-external-link" class="mt-4 text-center hidden">
+                    <!-- Optional link injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="relative z-10 border-t border-casbo-accent/20 bg-casbo-surface/50 mt-12">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div class="flex items-center gap-4">
+                    <div 
+                        class="w-8 h-8 mix-blend-screen pointer-events-none select-none opacity-60"
+                        style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                        oncontextmenu="return false;"
+                        ondragstart="return false;"
+                        aria-label="C.A.S.B.O Laurel Emblem"
+                    ></div>
+                    <span class="font-display text-sm font-bold tracking-widest text-white uppercase">C.A.S.B.O</span>
+                </div>
+                <div class="text-xs font-light text-gray-600 max-w-xl md:text-right">
+                    <p class="mb-2">A joint initiative operated by Final Render Animation Studio & Forge.</p>
+                    <p>&copy; <span id="year"></span> All rights reserved. Not a registered charity.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Global State for Filtering
+        let allRecipients = [];
+
+        function renderLedger(data) {
+            const grid = document.getElementById('ledger-grid');
+            grid.innerHTML = ''; 
+
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-20"><p class="text-gray-500 font-mono tracking-widest">NO RECORDS FOUND IN ARCHIVE.</p></div>`;
+                return;
+            }
+
+            data.forEach((recipient, index) => {
+                const delay = (index % 10) * 0.1; // Staggered animation capped
+                
+                // Visual Rhythm: Calculate Absolute Index Volume (Assuming newest first)
+                const absoluteIndex = allRecipients.findIndex(r => r.badgeId === recipient.badgeId);
+                const volumeNumber = String(allRecipients.length - absoluteIndex).padStart(3, '0');
+
+                // Recipient specific brand logo/initial
+                const logoHTML = recipient.logoUrl ? 
+                    `<img src="${recipient.logoUrl}" alt="${recipient.name} Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-white/10 bg-white/5 shrink-0 shadow-lg" />` : 
+                    `<div class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-display text-lg text-white font-bold shrink-0 shadow-lg">${recipient.name.charAt(0)}</div>`;
+                
+                const cardHTML = `
+                    <div class="glass-card rounded-2xl p-8 flex flex-col justify-between h-full animate-slide-up relative group overflow-hidden" style="animation-delay: ${delay}s; opacity: 0; animation-fill-mode: forwards;">
+                        
+                        <!-- Top Index Row -->
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-mono text-[10px] text-gray-500 tracking-[0.2em]">VOL. ${volumeNumber}</span>
+                            ${logoHTML}
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-6 h-6 mix-blend-screen pointer-events-none select-none shrink-0 opacity-70"
+                                     style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                </div>
+                                <span class="font-mono text-[10px] font-semibold tracking-widest text-casbo-accent uppercase">
+                                    ${recipient.month}
+                                </span>
+                            </div>
+                            
+                            <h3 class="font-arvo text-2xl font-bold text-white mb-4 leading-snug group-hover:text-gray-200 transition-colors">
+                                ${recipient.name}
+                            </h3>
+                            
+                            <!-- Progressive Disclosure: Line Clamping applied here -->
+                            <div class="rich-text mb-8 text-sm line-clamp-3 overflow-hidden text-ellipsis">
+                                <p>${recipient.description}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6 border-t border-white/5 mt-auto flex flex-col sm:flex-row gap-4 justify-between items-center">
+                            <span class="font-mono text-[10px] text-gray-500 tracking-[0.2em] truncate w-full sm:w-auto">
+                                ID:${recipient.badgeId}
+                            </span>
+                            <button 
+                                onclick="openModal('${recipient.badgeId}')"
+                                class="w-full sm:w-auto px-5 py-2.5 bg-white text-black font-display font-bold text-xs tracking-widest uppercase rounded-full hover:bg-gray-200 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                            >
+                                Explore Official Record
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // Search & Filter Logic
+        function initFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const yearFilter = document.getElementById('yearFilter');
+
+            // Extract unique years from data
+            const years = [...new Set(allRecipients.map(r => {
+                const parts = r.month.split(' ');
+                return parts.length > 1 ? parts[1] : null;
+            }).filter(Boolean))].sort().reverse();
+
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                option.className = "bg-black text-white";
+                yearFilter.appendChild(option);
+            });
+
+            const filterData = () => {
+                const query = searchInput.value.toLowerCase();
+                const selectedYear = yearFilter.value;
+
+                const filtered = allRecipients.filter(r => {
+                    const matchesSearch = r.name.toLowerCase().includes(query) || 
+                                          r.badgeId.toLowerCase().includes(query) || 
+                                          r.description.toLowerCase().includes(query);
+                    const matchesYear = selectedYear === 'all' || r.month.includes(selectedYear);
+                    return matchesSearch && matchesYear;
+                });
+
+                renderLedger(filtered);
+            };
+
+            searchInput.addEventListener('input', filterData);
+            yearFilter.addEventListener('change', filterData);
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('verification-modal');
+        const modalPanel = document.getElementById('modal-panel');
+
+        function openModal(badgeId) {
+            const recipient = allRecipients.find(r => r.badgeId === badgeId);
+            if (!recipient) return;
+
+            document.getElementById('modal-title').textContent = recipient.name;
+            document.getElementById('modal-badge-id').textContent = recipient.badgeId;
+            document.getElementById('modal-date').textContent = recipient.month;
+            document.getElementById('modal-description').innerHTML = `<p>${recipient.description}</p>`;
+
+            const logoContainer = document.getElementById('modal-logo-container');
+            if (recipient.logoUrl) {
+                logoContainer.innerHTML = `<img src="${recipient.logoUrl}" alt="Logo" class="w-16 h-16 rounded-full object-cover border border-white/20 bg-white/5" />`;
+            } else {
+                logoContainer.innerHTML = `<div class="w-16 h-16 rounded-full border border-white/20 bg-white/5 flex items-center justify-center font-display text-2xl text-white font-bold">${recipient.name.charAt(0)}</div>`;
+            }
+
+            const externalLink = document.getElementById('modal-external-link');
+            if (recipient.link && recipient.link !== "#") {
+                externalLink.innerHTML = `<a href="${recipient.link}" target="_blank" class="inline-block mt-4 font-display text-xs text-casbo-accent tracking-[0.2em] uppercase hover:text-white transition-colors underline underline-offset-4">Visit Recipient Site &rarr;</a>`;
+                externalLink.classList.remove('hidden');
+            } else {
+                externalLink.classList.add('hidden');
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modalPanel.classList.remove('scale-95', 'opacity-0');
+                modalPanel.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            modalPanel.classList.remove('scale-100', 'opacity-100');
+            modalPanel.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; 
+            }, 300); 
+        }
+
+        // Initialize Data
+        window.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('ledger-grid');
+            grid.innerHTML = '<div class="col-span-full text-center text-casbo-accent font-mono tracking-widest animate-pulse py-20 flex flex-col items-center gap-4"><div class="w-6 h-6 border-2 border-casbo-accent border-t-white rounded-full animate-spin"></div><div>INITIALIZING SECURE CONNECTION...<br>FETCHING ARCHIVES</div></div>';
+
+            fetch('/ledger/recipients.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    allRecipients = data;
+                    document.getElementById('stat-total').textContent = String(allRecipients.length).padStart(2, '0');
+                    initFilters();
+                    renderLedger(allRecipients);
+                })
+                .catch(error => {
+                    console.warn('Could not fetch from /ledger/recipients.json, using fallback data:', error);
+                    allRecipients = [
+                        {
+                            "badgeId": "CASBO-2026-10-X19",
+                            "month": "October 2026",
+                            "name": "Campus Culinary pre-Order System",
+                            "logoUrl": null,
+                            "description": "An end-to-end operational upgrade for a small campus lunch provider. We engineered a <b>custom, high-conversion pre-order interface</b> that interfaces cleanly with backend spreadsheets. This eliminated manual order tracking and implemented automated, branded email receipts.<br><br><i>Integrated seamlessly with <code>Lynk</code> and <code>Bpay</code> for contactless, frictionless checkout.</i>",
+                            "link": "#"
+                        },
+                        {
+                            "badgeId": "CASBO-2026-09-X18",
+                            "month": "September 2026",
+                            "name": "Bespoke Matchmaking Agency",
+                            "logoUrl": null,
+                            "description": "Replaced restrictive, high-overhead form builders (like JotForm) with a <b>premium bespoke UI</b> mapped directly to free Google infrastructure. This evolution completely shifted their brand perception from a startup ideation to a highly authoritative, premium matchmaking service. Included advanced validation and <a href='https://cleo876.github.io/Forge-Suite/' target='_blank'>Forge-powered</a> logic.",
+                            "link": "#"
+                        },
+                        {
+                            "badgeId": "CASBO-2026-08-X17",
+                            "month": "August 2026",
+                            "name": "Jamaica Animation Nation Network (JANN)",
+                            "logoUrl": null,
+                            "description": "An in-kind contribution establishing a robust, authoritative digital presence to support JANN in becoming the <b>premier representative body</b> for the animation industry in Jamaica. A ground-up architectural restructure focused on legitimacy and data management.",
+                            "link": "https://animationjamaica.com"
+                        }
+                    ];
+                    document.getElementById('stat-total').textContent = String(allRecipients.length).padStart(2, '0');
+                    initFilters();
+                    renderLedger(allRecipients);
+                });
+        });
+    </script>
+</body>
+</html>
