@@ -301,20 +301,106 @@
         <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
                 <div class="flex items-center gap-4">
+                    <div 
+                        class="w-8 h-8 mix-blend-screen pointer-events-none select-none opacity-60"
+                        style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                        oncontextmenu="return false;"
+                        ondragstart="return false;"
+                        aria-label="C.A.S.B.O Laurel Emblem"
+                    ></div>
+                    <span class="font-display text-sm font-bold tracking-widest text-white uppercase">C.A.S.B.O</span>
+                </div>
+                <div class="text-xs font-light text-gray-600 max-w-xl md:text-right">
+                    <p class="mb-2">A joint initiative operated by Final Render Animation Studio &amp; Forge.</p>
+                    <p>&copy; <span id="year"></span> All rights reserved. Not a registered charity.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Global state for search and year filtering
+        let allRecipients = [];
+
+        function escapeAttr(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function escapeText(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function renderLedger(data) {
+            const grid = document.getElementById('ledger-grid');
+            grid.innerHTML = '';
+
+            if (!Array.isArray(data) || data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-20"><p class="text-gray-500 font-mono tracking-widest">NO RECORDS FOUND IN ARCHIVE.</p></div>`;
+                return;
+            }
+
+            data.forEach((recipient, index) => {
+                const delay = (index % 10) * 0.1;
+
+                // Sequential volume number based on full archive order (newest first)
+                const absoluteIndex = allRecipients.findIndex(r => r.badgeId === recipient.badgeId);
+                const volumeNumber = String(allRecipients.length - (absoluteIndex === -1 ? index : absoluteIndex)).padStart(3, '0');
+
+                const safeName = escapeText(recipient.name || 'Unnamed Recipient');
+                const safeId = escapeText(recipient.badgeId || 'CASBO-RECORD');
+                const safeMonth = escapeText(recipient.month || 'Unknown Date');
+                const initial = escapeText((recipient.name || 'C').trim().charAt(0).toUpperCase());
+                const recordUrl = recipient.pageUrl || `ledger/${encodeURIComponent(recipient.badgeId || 'record')}.html`;
+
+                const logoHTML = recipient.logoUrl
+                    ? `<img src="${escapeAttr(recipient.logoUrl)}" alt="${escapeAttr(recipient.name)} Logo" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-white/10 bg-white/5 shrink-0 shadow-lg" onerror="this.outerHTML='<div class=\\'w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-display text-lg text-white font-bold shrink-0 shadow-lg\\'>${initial}</div>'" />`
+                    : `<div class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-display text-lg text-white font-bold shrink-0 shadow-lg">${initial}</div>`;
+
+                const cardHTML = `
+                    <div class="glass-card rounded-2xl p-8 flex flex-col justify-between h-full animate-slide-up relative group overflow-hidden" style="animation-delay: ${delay}s; opacity: 0; animation-fill-mode: forwards;">
+                        
+                        <!-- Top Index Row -->
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-mono text-[10px] text-gray-500 tracking-[0.2em]">VOL. ${volumeNumber}</span>
+                            ${logoHTML}
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-6 h-6 mix-blend-screen pointer-events-none select-none shrink-0 opacity-70"
+                                     style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                                </div>
+                                <span class="font-mono text-[10px] font-semibold tracking-widest text-casbo-accent uppercase">
+                                    ${safeMonth}
+                                </span>
+                            </div>
+                            
+                            <h3 class="font-arvo text-2xl font-bold text-white mb-4 leading-snug group-hover:text-gray-200 transition-colors">
+                                ${safeName}
+                            </h3>
+                            
+                            <!-- Line-clamped preview teaser from recipients.json -->
+                            <div class="rich-text mb-8 text-sm line-clamp-3 overflow-hidden text-ellipsis">
+                                <p>${recipient.description || ''}</p>
+                            </div>
+                        </div>
+                        
                         <div class="pt-6 border-t border-white/5 mt-auto flex flex-col gap-4">
                             <span class="font-mono text-[10px] text-gray-500 tracking-[0.2em] truncate">
-                                ID:${recipient.badgeId}
+                                ID:${safeId}
                             </span>
                             <div class="flex flex-col sm:flex-row gap-2.5 w-full">
                                 <button 
                                     type="button"
-                                    onclick="openModal('${recipient.badgeId}')"
+                                    onclick="openModal('${escapeAttr(recipient.badgeId)}')"
                                     class="flex-1 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/15 text-gray-200 hover:text-white font-display font-semibold text-[11px] tracking-widest uppercase rounded-full transition-all duration-300 whitespace-nowrap"
                                 >
                                     Quick Summary
                                 </button>
                                 <a 
-                                    href="${recordUrl}"
+                                    href="${escapeAttr(recordUrl)}"
                                     class="flex-1 text-center px-4 py-2.5 bg-white text-black font-display font-bold text-[11px] tracking-widest uppercase rounded-full hover:bg-gray-200 hover:scale-[1.03] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.08)] hover:shadow-[0_0_20px_rgba(255,255,255,0.22)]"
                                 >
                                     Full Record &rarr;
@@ -336,23 +422,24 @@
             if (!recipient) return;
 
             const recordUrl = recipient.pageUrl || `ledger/${encodeURIComponent(recipient.badgeId)}.html`;
+            const initial = escapeText((recipient.name || 'C').trim().charAt(0).toUpperCase());
 
-            document.getElementById('modal-title').textContent = recipient.name;
-            document.getElementById('modal-badge-id').textContent = recipient.badgeId;
-            document.getElementById('modal-date').textContent = recipient.month;
-            document.getElementById('modal-description').innerHTML = `<p>${recipient.description}</p>`;
+            document.getElementById('modal-title').textContent = recipient.name || 'Unnamed Recipient';
+            document.getElementById('modal-badge-id').textContent = recipient.badgeId || 'CASBO-RECORD';
+            document.getElementById('modal-date').textContent = recipient.month || 'Unknown Date';
+            document.getElementById('modal-description').innerHTML = `<p>${recipient.description || ''}</p>`;
             document.getElementById('modal-full-record-link').setAttribute('href', recordUrl);
 
             const logoContainer = document.getElementById('modal-logo-container');
             if (recipient.logoUrl) {
-                logoContainer.innerHTML = `<img src="${recipient.logoUrl}" alt="${recipient.name} Logo" class="w-16 h-16 rounded-full object-cover border border-white/20 bg-white/5" />`;
+                logoContainer.innerHTML = `<img src="${escapeAttr(recipient.logoUrl)}" alt="${escapeAttr(recipient.name)} Logo" class="w-16 h-16 rounded-full object-cover border border-white/20 bg-white/5" onerror="this.outerHTML='<div class=\\'w-16 h-16 rounded-full border border-white/20 bg-white/5 flex items-center justify-center font-display text-2xl text-white font-bold\\'>${initial}</div>'" />`;
             } else {
-                logoContainer.innerHTML = `<div class="w-16 h-16 rounded-full border border-white/20 bg-white/5 flex items-center justify-center font-display text-2xl text-white font-bold">${recipient.name.charAt(0)}</div>`;
+                logoContainer.innerHTML = `<div class="w-16 h-16 rounded-full border border-white/20 bg-white/5 flex items-center justify-center font-display text-2xl text-white font-bold">${initial}</div>`;
             }
 
             const externalLink = document.getElementById('modal-external-link');
             if (recipient.link && recipient.link !== "#") {
-                externalLink.innerHTML = `<a href="${recipient.link}" target="_blank" rel="noopener noreferrer" class="inline-block w-full sm:w-auto px-5 py-3.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 font-display text-xs text-gray-200 hover:text-white tracking-[0.15em] uppercase transition-colors">Visit Site &nearr;</a>`;
+                externalLink.innerHTML = `<a href="${escapeAttr(recipient.link)}" target="_blank" rel="noopener noreferrer" class="inline-block w-full sm:w-auto px-5 py-3.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 font-display text-xs text-gray-200 hover:text-white tracking-[0.15em] uppercase transition-colors">Visit Site &nearr;</a>`;
                 externalLink.classList.remove('hidden');
             } else {
                 externalLink.classList.add('hidden');
@@ -390,8 +477,11 @@
             const searchInput = document.getElementById('searchInput');
             const yearFilter = document.getElementById('yearFilter');
 
+            // Reset existing year options except "All Years"
+            yearFilter.innerHTML = '<option value="all" class="bg-black text-white">All Years</option>';
+
             const years = [...new Set(allRecipients.map(r => {
-                const parts = r.month.split(' ');
+                const parts = (r.month || '').split(' ');
                 return parts.length > 1 ? parts[1] : null;
             }).filter(Boolean))].sort().reverse();
 
@@ -408,10 +498,10 @@
                 const selectedYear = yearFilter.value;
 
                 const filtered = allRecipients.filter(r => {
-                    const matchesSearch = r.name.toLowerCase().includes(query) || 
-                                          r.badgeId.toLowerCase().includes(query) || 
-                                          r.description.toLowerCase().includes(query);
-                    const matchesYear = selectedYear === 'all' || r.month.includes(selectedYear);
+                    const matchesSearch = (r.name || '').toLowerCase().includes(query) ||
+                                          (r.badgeId || '').toLowerCase().includes(query) ||
+                                          (r.description || '').toLowerCase().includes(query);
+                    const matchesYear = selectedYear === 'all' || (r.month || '').includes(selectedYear);
                     return matchesSearch && matchesYear;
                 });
 
@@ -432,7 +522,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    allRecipients = data;
+                    allRecipients = Array.isArray(data) ? data : [];
                     document.getElementById('stat-total').textContent = String(allRecipients.length).padStart(2, '0');
                     initFilters();
                     renderLedger(allRecipients);
@@ -446,7 +536,8 @@
                             "name": "Campus Culinary pre-Order System",
                             "logoUrl": null,
                             "description": "An end-to-end operational upgrade for a small campus lunch provider. We engineered a <b>custom, high-conversion pre-order interface</b> that interfaces cleanly with backend spreadsheets.",
-                            "link": "#"
+                            "link": "#",
+                            "pageUrl": "ledger/CASBO-2026-10-X19.html"
                         },
                         {
                             "badgeId": "CASBO-2026-09-X18",
@@ -454,15 +545,17 @@
                             "name": "Bespoke Matchmaking Agency",
                             "logoUrl": null,
                             "description": "Replaced restrictive, high-overhead form builders (like JotForm) with a <b>premium bespoke UI</b> mapped directly to free Google infrastructure.",
-                            "link": "#"
+                            "link": "#",
+                            "pageUrl": "ledger/CASBO-2026-09-X18.html"
                         },
                         {
                             "badgeId": "CASBO-2026-08-X17",
                             "month": "August 2026",
                             "name": "Jamaica Animation Nation Network (JANN)",
                             "logoUrl": null,
-                            "description": "An in-kind contribution establishing a robust, authoritative digital presence to support JANN in becoming the <b>premier representative body</b> for the animation industry in Jamaica.",
-                            "link": "https://animationjamaica.com"
+                            "description": "An in-kind technological evolution delivering Dispatch-E, a custom newsletter application engineered to power official outreach for Jamaica Animation Nation Network (JANN).",
+                            "link": "https://animationjamaica.com",
+                            "pageUrl": "ledger/CASBO-2026-08-X17.html"
                         }
                     ];
                     document.getElementById('stat-total').textContent = String(allRecipients.length).padStart(2, '0');
