@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C.A.S.B.O | 1:1 Inline Page Studio</title>
+
+    <link rel="icon" type="image/png" href="https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        casbo: {
+                            accent: '#666666',
+                            bg: '#030303',
+                            surface: '#0a0a0a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        arvo: ['Arvo', 'serif'],
+                    },
+                    animation: {
+                        'aurora': 'aurora 20s linear infinite',
+                    },
+                    keyframes: {
+                        aurora: {
+                            '0%, 100%': { transform: 'translate(0, 0) scale(1) rotate(0deg)' },
+                            '33%': { transform: 'translate(5%, -5%) scale(1.05) rotate(2deg)' },
+                            '66%': { transform: 'translate(-5%, 5%) scale(0.95) rotate(-2deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030303;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #333333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #666666; }
+
+        /* Ambient glows matching final exported page */
+        .vibrancy-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.14;
+        }
+        .glow-blue {
+            top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(14,165,233,0.8) 0%, rgba(0,0,0,0) 70%);
+        }
+        .glow-purple {
+            bottom: -20%; right: -10%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(0,0,0,0) 70%);
+            animation-delay: -10s;
+        }
+
+        /* 1:1 Rich Text Styling (Mirrored identically in Exported HTML) */
+        .rich-text { outline: none; min-height: 2rem; }
+        .rich-text h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; color: #ffffff; margin: 1.5rem 0 0.75rem; letter-spacing: -0.02em; }
+        .rich-text h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; color: #f3f4f6; margin: 1.25rem 0 0.5rem; }
+        .rich-text p, .rich-text div { margin-bottom: 1rem; line-height: 1.75; color: #d1d5db; font-weight: 300; }
+        .rich-text p:last-child, .rich-text div:last-child { margin-bottom: 0; }
+        .rich-text strong, .rich-text b { color: #ffffff; font-weight: 600; }
+        .rich-text i, .rich-text em { font-style: italic; color: #e5e7eb; }
+        .rich-text u { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #666666; }
+        .rich-text a { color: #ffffff; text-decoration: underline; text-decoration-color: #666666; text-underline-offset: 4px; font-weight: 500; transition: all 0.2s ease; }
+        .rich-text a:hover { text-decoration-color: #ffffff; }
+        .rich-text code { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.18); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85em; color: #f3f4f6; }
+        .rich-text blockquote { border-left: 2px solid #666666; padding-left: 1.25rem; font-style: italic; color: #9ca3af; margin: 1.25rem 0; }
+        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
+        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
+        .rich-text li { margin-bottom: 0.4rem; }
+
+        /* Required 8px rounded edges and crisp outline for all content images */
+        .casbo-media-frame {
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            position: relative;
+        }
+
+        /* Adaptive Bento Flex/Grid System (Respects Natural Aspect Ratios) */
+        .bento-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+        }
+        .bento-row {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .bento-row {
+                flex-direction: row;
+                align-items: stretch;
+            }
+        }
+        .bento-tile {
+            position: relative;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .bento-tile .bento-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            flex: 1;
+        }
+        .bento-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .bento-asymmetric {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .bento-asymmetric {
+                grid-template-columns: var(--bento-cols, 1fr 1fr);
+                align-items: stretch;
+            }
+        }
+        .bento-subcol {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        /* True Inline Editable Affordances */
+        body:not(.preview-mode) [data-inline-editable="true"] {
+            border-radius: 6px;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            cursor: text;
+        }
+        body:not(.preview-mode) [data-inline-editable="true"]:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+        }
+        body:not(.preview-mode) [data-inline-editable="true"]:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+        }
+
+        /* Inline Block Wrapper */
+        .editor-block {
+            position: relative;
+            border-radius: 12px;
+            transition: box-shadow 0.2s ease;
+        }
+        body:not(.preview-mode) .editor-block:hover,
+        body:not(.preview-mode) .editor-block:focus-within {
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+        }
+
+        /* Floating Block Action Pill (Appears on Hover/Focus) */
+        .block-floating-bar {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(4px);
+        }
+        body:not(.preview-mode) .editor-block:hover > .block-floating-bar,
+        body:not(.preview-mode) .editor-block:focus-within > .block-floating-bar {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        /* Insert-Anywhere Divider */
+        .insert-divider {
+            position: relative;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 6px 0;
+        }
+        .insert-divider-line {
+            position: absolute;
+            left: 0; right: 0; top: 50%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            transition: background-color 0.2s ease;
+        }
+        .insert-divider:hover .insert-divider-line,
+        .insert-divider.open .insert-divider-line {
+            background: rgba(255, 255, 255, 0.28);
+        }
+        .insert-trigger-btn {
+            position: relative;
+            z-index: 2;
+            opacity: 0.35;
+            transition: all 0.2s ease;
+        }
+        .insert-divider:hover .insert-trigger-btn,
+        .insert-divider.open .insert-trigger-btn {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Studio Form Inputs (used inside Modals/Drawers) */
+        .studio-input {
+            width: 100%;
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            color: #ffffff;
+            font-size: 0.85rem;
+            transition: border-color 0.2s ease;
+        }
+        .studio-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Hide all editor UI in 1:1 Preview Mode */
+        body.preview-mode .editor-only {
+            display: none !important;
+        }
+        body.preview-mode .editor-block {
+            box-shadow: none !important;
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+        }
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        ::selection { background: #ffffff; color: #000000; }
+    </style>
+</head>
+<body class="antialiased font-sans min-h-screen">
+
+    <!-- AMBIENT VIBRANCY LAYER (Identical to Exported Page) -->
+    <div class="vibrancy-layer">
+        <div class="glow-orb glow-blue animate-aurora"></div>
+        <div class="glow-orb glow-purple animate-aurora"></div>
+    </div>
+
+    <!-- TOP FLOATING STUDIO BAR (Compact, Full-Width, Non-Intrusive) -->
+    <header class="fixed top-0 inset-x-0 z-50 h-16 border-b border-white/10 bg-[#050505]/90 backdrop-blur-xl px-4 md:px-8 flex items-center justify-between gap-3">
+        <!-- Left: Studio Brand + Inline Editable File/CASBO ID -->
+        <div class="flex items-center gap-3 min-w-0">
+            <div class="w-7 h-7 mix-blend-screen pointer-events-none select-none shrink-0"
+                 style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+            </div>
+            <span class="hidden md:inline font-display text-xs font-bold tracking-[0.2em] uppercase text-gray-400">Studio</span>
+            <span class="hidden md:inline text-white/15">/</span>
+            <!-- Top CASBO Number Field (Directly sets URL slug & Search ID) -->
+            <div class="flex items-center gap-1.5 bg-white/[0.04] border border-white/10 rounded-full px-3 py-1 max-w-[220px] sm:max-w-xs">
+                <span class="font-mono text-[9px] text-gray-500 uppercase tracking-widest shrink-0">ID:</span>
+                <input type="text" id="top-casbo-id" value="CASBO-2026-08-X17"
+                       class="bg-transparent border-none text-white font-mono text-xs font-semibold tracking-wider focus:outline-none w-36 sm:w-44"
+                       placeholder="CASBO-2026-08-X17"
+                       oninput="syncCasboIdFromTop(this.value)"
+                       title="C.A.S.B.O Number (Used for Search & Exported URL Filename)">
+                <span class="hidden sm:inline font-mono text-[10px] text-gray-500">.html</span>
+            </div>
+        </div>
+
+        <!-- Right: Compact Action Controls -->
+        <div class="flex items-center gap-2 shrink-0">
+            <button onclick="openSeoDrawer()" class="editor-only px-3 py-2 rounded-full border border-white/15 text-gray-300 hover:text-white hover:bg-white/10 font-display text-[10px] font-semibold tracking-widest uppercase transition-colors flex items-center gap-1.5" title="SEO Settings, Drafts & Ledger JSON">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="hidden sm:inline">SEO &amp; Data</span>
+            </button>
+
+            <button onclick="togglePreviewMode()" id="btn-preview-toggle" class="px-3 py-2 rounded-full border border-white/15 text-gray-200 hover:bg-white/10 font-display text-[10px] font-semibold tracking-widest uppercase transition-colors flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <span id="preview-btn-text" class="hidden sm:inline">Preview</span>
+            </button>
+
+            <button onclick="exportStandaloneHTML()" class="px-4 py-2 rounded-full bg-white text-black font-display text-[10px] font-bold tracking-widest uppercase hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Export HTML</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ========================================================== -->
+    <!-- 1:1 FULL-CANVAS INLINE PAGE (EXACT FINAL PAGE LAYOUT)       -->
+    <!-- ========================================================== -->
+    <main class="relative z-10 max-w-4xl mx-auto px-6 md:px-10 pt-28 pb-28">
+
+        <!-- HERO: RECIPIENT LAUREL + PREMIUM COMPANY IDENTITY LOCKUP -->
+        <header class="flex flex-col items-center text-center mb-16 pb-14 border-b border-white/10">
+
+            <!-- 1. Recipient-Specific Protected Laurel (Click to edit URL — also drives WhatsApp/FB OG Image) -->
+            <div class="relative group w-full max-w-[23rem] mb-10 flex flex-col items-center">
+                <div id="canvas-laurel-img"
+                     class="w-full aspect-[4/3] drop-shadow-2xl mix-blend-screen pointer-events-none select-none"
+                     style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                </div>
+                <button onclick="openAssetModal('laurel')" class="editor-only absolute inset-0 m-auto w-fit h-fit px-4 py-2 rounded-full bg-black/85 border border-white/25 text-white font-display text-[10px] font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity shadow-2xl backdrop-blur-md flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    Set Recipient Laurel URL (Hero + OG)
+                </button>
+            </div>
+
+            <!-- 2. Premium Recipient Identity Card (Brand Logo + Name + Verification Meta) -->
+            <div class="w-full max-w-3xl rounded-2xl bg-white/[0.025] border border-white/10 backdrop-blur-md p-6 sm:p-8 md:p-10 mb-8 shadow-2xl">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 text-center sm:text-left">
+
+                    <!-- Recipient Brand Logo (Click to set URL) -->
+                    <div class="relative group shrink-0">
+                        <div id="canvas-brand-logo-wrap" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-white/15 bg-black/60 flex items-center justify-center overflow-hidden shadow-xl p-2">
+                            <!-- Dynamically rendered logo or monogram -->
+                        </div>
+                        <button onclick="openAssetModal('logo')" class="editor-only absolute inset-0 rounded-2xl bg-black/80 text-white font-mono text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 border border-white/30">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span>Set Logo</span>
+                        </button>
+                    </div>
+
+                    <!-- Company Name & Badges -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-mono text-[10px] tracking-[0.18em] uppercase">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                                Verified Recipient
+                            </span>
+                            <span id="canvas-casbo-id" data-inline-editable="true" contenteditable="true"
+                                  oninput="syncCasboIdFromCanvas(this.textContent)"
+                                  class="px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-gray-300 tracking-[0.18em] uppercase">
+                                CASBO-2026-08-X17
+                            </span>
+                            <span id="canvas-month" data-inline-editable="true" contenteditable="true"
+                                  oninput="state.meta.month = this.textContent.trim()"
+                                  class="px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-casbo-accent tracking-[0.18em] uppercase">
+                                August 2026
+                            </span>
+                        </div>
+
+                        <h1 id="canvas-company-name" data-inline-editable="true" contenteditable="true"
+                            oninput="syncCompanyName(this.textContent)"
+                            class="font-arvo text-2xl sm:text-4xl font-bold text-white leading-tight px-1 -mx-1">
+                            Jamaica Animation Nation Network (JANN)
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Inline Editable Summary / SEO Description -->
+            <p id="canvas-seo-desc" data-inline-editable="true" contenteditable="true"
+               oninput="state.meta.seoDesc = this.textContent.trim()"
+               class="font-sans text-gray-400 text-base md:text-lg font-light leading-relaxed max-w-2xl mb-7 px-2 py-1">
+                An in-kind technological and creative evolution establishing a robust, authoritative digital presence for Jamaica Animation Nation Network (JANN).
+            </p>
+
+            <!-- 4. Recipient Website CTA (Click pencil in edit mode to change URL) -->
+            <div class="flex items-center gap-2">
+                <div id="canvas-website-cta"></div>
+                <button onclick="openAssetModal('website')" class="editor-only px-3 py-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/15 text-gray-300 font-mono text-[10px] uppercase tracking-widest transition-colors" title="Set Recipient Website Link">
+                    Edit Link
+                </button>
+            </div>
+        </header>
+
+        <!-- INLINE CONTENT BLOCKS WITH INSERT-ANYWHERE DIVIDERS -->
+        <div id="blocks-container" class="flex flex-col">
+            <!-- Dynamically Rendered -->
+        </div>
+
+        <!-- OFFICIAL AUTHENTICITY SEAL (Mirrored in Final Exported Page) -->
+        <section class="mt-16 p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-center">
+            <div class="inline-flex items-center justify-center gap-2.5 text-green-400 mb-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="font-display text-xs font-bold tracking-[0.2em] uppercase">Official C.A.S.B.O Verification</span>
+            </div>
+            <p class="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed mb-6">
+                This record certifies that <strong id="seal-company-name" class="text-white">Jamaica Animation Nation Network (JANN)</strong> was selected and elevated at zero cost by <strong class="text-white">Final Render Animation Studio</strong> &amp; <strong class="text-white">Forge&trade;</strong>.
+            </p>
+            <div class="inline-block px-5 py-2 rounded-lg bg-black border border-white/10 font-mono text-xs text-gray-300 tracking-[0.25em]" id="seal-casbo-id">
+                CASBO-2026-08-X17
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================== -->
+    <!-- MODALS & DRAWERS (HIDDEN UNTIL INVOKED)                     -->
+    <!-- ========================================================== -->
+
+    <!-- 1. ASSET URL MODAL (Laurel / Brand Logo / Website / Single Image / Bento Tile) -->
+    <div id="asset-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] hidden items-center justify-center p-4">
+        <div class="bg-[#0a0a0a] border border-white/15 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+            <h3 id="asset-modal-title" class="font-display text-lg font-bold text-white mb-1">Update Asset</h3>
+            <p id="asset-modal-desc" class="text-xs text-gray-400 mb-5 leading-relaxed">Paste the raw URL below.</p>
+
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label id="asset-url-label" class="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1.5">Raw URL</label>
+                    <input type="url" id="asset-modal-url" class="studio-input font-mono text-xs" placeholder="https://...">
+                </div>
+                <div id="asset-caption-wrap" class="hidden">
+                    <label class="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1.5">Caption (Optional)</label>
+                    <input type="text" id="asset-modal-caption" class="studio-input text-xs" placeholder="Describe this visual...">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="closeAssetModal()" class="px-4 py-2 rounded-full border border-white/10 text-xs font-display font-semibold uppercase tracking-widest text-gray-300 hover:bg-white/5">Cancel</button>
+                <button onclick="saveAssetModal()" class="px-5 py-2 rounded-full bg-white text-black text-xs font-display font-bold uppercase tracking-widest hover:bg-gray-200">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. SEO & DATA DRAWER (Slide-Over, Only Open When Clicked) -->
+    <div id="seo-drawer-backdrop" onclick="closeSeoDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[180] hidden"></div>
+    <aside id="seo-drawer" class="fixed top-0 right-0 bottom-0 w-full max-w-md bg-[#080808] border-l border-white/10 z-[190] transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="h-16 px-6 border-b border-white/10 flex items-center justify-between">
+            <span class="font-display text-xs font-bold tracking-[0.2em] uppercase text-white">SEO, Open Graph &amp; Data</span>
+            <button onclick="closeSeoDrawer()" class="text-gray-400 hover:text-white p-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- URL Preview -->
+            <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+                <span class="block font-mono text-[9px] text-gray-500 uppercase tracking-widest mb-1">Published Page URL</span>
+                <p class="font-mono text-xs text-white break-all" id="drawer-url-preview">https://cleo876.github.io/casbo/ledger/CASBO-2026-08-X17.html</p>
+            </div>
+
+            <!-- Recipient Laurel URL (Hero + WhatsApp/FB OG) -->
+            <div>
+                <label class="flex justify-between font-mono text-[10px] text-gray-300 uppercase tracking-widest mb-1.5">
+                    <span>Recipient Laurel URL *</span>
+                    <span class="text-green-400">Hero + WhatsApp OG</span>
+                </label>
+                <input type="url" id="drawer-laurelUrl" class="studio-input font-mono text-xs" oninput="state.meta.laurelUrl = this.value.trim(); syncAllHeroUI();">
+                <p class="text-[10px] text-gray-500 mt-1.5">Renders at the top of the page AND injects into WhatsApp/Facebook Open Graph tags (1200&times;630 PNG/JPG, &lt;300KB).</p>
+            </div>
+
+            <!-- Recipient Brand Logo URL -->
+            <div>
+                <label class="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1.5">Company Brand Logo URL</label>
+                <input type="url" id="drawer-logoUrl" class="studio-input font-mono text-xs" placeholder="Blank = Monogram" oninput="state.meta.logoUrl = this.value.trim(); syncAllHeroUI();">
+            </div>
+
+            <!-- Additional SEO Keywords -->
+            <div>
+                <label class="block font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1.5">Additional SEO Keywords</label>
+                <input type="text" id="drawer-keywords" class="studio-input text-xs" oninput="state.meta.keywords = this.value.trim()">
+                <p class="text-[10px] text-gray-500 mt-1">Company name, C.A.S.B.O ID, Month, F.R.A.S, and Forge are auto-indexed.</p>
+            </div>
+
+            <!-- Ledger JSON & Draft Actions -->
+            <div class="pt-4 border-t border-white/10 space-y-3">
+                <span class="block font-mono text-[10px] text-gray-500 uppercase tracking-widest">Archive &amp; Project Tools</span>
+                <button onclick="copyLedgerJSON()" class="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-display text-xs font-semibold tracking-widest uppercase text-white transition-colors">
+                    Copy JSON Entry for /ledger/recipients.json
+                </button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="saveDraftJSON()" class="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-mono text-[11px] uppercase tracking-wider text-gray-300 transition-colors">
+                        Save Draft
+                    </button>
+                    <button onclick="document.getElementById('import-draft-input').click()" class="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-mono text-[11px] uppercase tracking-wider text-gray-300 transition-colors">
+                        Load Draft
+                    </button>
+                    <input type="file" id="import-draft-input" accept=".json" class="hidden" onchange="loadDraftJSON(event)">
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 3. HYPERLINK MODAL (For Rich Text Selections) -->
+    <div id="link-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] hidden items-center justify-center p-4">
+        <div class="bg-[#0a0a0a] border border-white/15 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+            <h3 class="font-display text-lg font-bold text-white mb-1">Insert Hyperlink</h3>
+            <p class="text-xs text-gray-400 mb-4">Enter the destination URL for the selected text.</p>
+            <input type="url" id="link-modal-url" class="studio-input font-mono text-xs mb-5" placeholder="https://example.com">
+            <div class="flex justify-end gap-3">
+                <button onclick="closeLinkModal()" class="px-4 py-2 rounded-full border border-white/10 text-xs font-display font-semibold uppercase tracking-widest text-gray-300 hover:bg-white/5">Cancel</button>
+                <button onclick="applyHyperlink()" class="px-5 py-2 rounded-full bg-white text-black text-xs font-display font-bold uppercase tracking-widest hover:bg-gray-200">Apply Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="px-5 py-3.5 rounded-xl flex items-center gap-3 backdrop-blur-md shadow-2xl border">
+        <span id="toast-msg" class="font-display text-xs font-semibold tracking-wider uppercase">Notification</span>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. CENTRAL PAGE STATE
+        // ============================================================
+        const state = {
+            meta: {
+                casboId: 'CASBO-2026-08-X17',
+                companyName: 'Jamaica Animation Nation Network (JANN)',
+                month: 'August 2026',
+                laurelUrl: 'https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true',
+                logoUrl: '',
+                websiteUrl: 'https://animationjamaica.com',
+                seoDesc: 'An in-kind technological and creative evolution establishing a robust, authoritative digital presence for Jamaica Animation Nation Network (JANN).',
+                keywords: 'animation Jamaica, digital infrastructure, creative evolution'
+            },
+            blocks: [
+                {
+                    id: 'blk-1',
+                    type: 'richtext',
+                    html: `<h2>The Technological Evolution</h2><p>Every C.A.S.B.O. recipient is scouted for relentless consistency and high potential. Click anywhere in this paragraph to edit inline, or highlight text to apply <b>bold</b>, <i>italics</i>, <code>monospace</code>, or hyperlinks.</p><p>Hover between any sections to click <code>+</code> and drop a <b>Single Image</b>, <b>Adaptive Bento Stack</b>, <b>Rich Text</b>, or <b>Client Quote</b> exactly where you want it.</p>`
+                },
+                {
+                    id: 'blk-2',
+                    type: 'bento',
+                    items: [
+                        { url: 'https://placehold.co/900x1200/0d0d0d/666666?text=Portrait+3:4', caption: 'Portrait View (Auto-Detected)', ratio: 0.75 },
+                        { url: 'https://placehold.co/1200x750/0d0d0d/666666?text=Landscape+16:10', caption: 'Primary Desktop Architecture', ratio: 1.6 },
+                        { url: 'https://placehold.co/1200x750/0d0d0d/666666?text=Landscape+Workflow', caption: 'Serverless Automation Flow', ratio: 1.6 }
+                    ]
+                },
+                {
+                    id: 'blk-3',
+                    type: 'quote',
+                    quote: 'This transformation immediately shifted how partners and the public perceive our organization. It feels official, effortless, and built to last.',
+                    author: 'Recipient Leadership',
+                    role: 'Executive Director'
+                }
+            ]
+        };
+
+        let activeAssetContext = null;
+        let savedSelectionRange = null;
+        let openInsertIndex = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            syncAllHeroUI();
+            renderAllBlocks();
+            // Close open insert menus when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.insert-divider')) {
+                    if (openInsertIndex !== null) {
+                        openInsertIndex = null;
+                        document.querySelectorAll('.insert-menu').forEach(m => m.classList.add('hidden'));
+                        document.querySelectorAll('.insert-divider').forEach(d => d.classList.remove('open'));
+                    }
+                }
+            });
+        });
+
+        // ============================================================
+        // 2. HERO & METADATA INLINE SYNCHRONIZATION
+        // ============================================================
+        function getSafeSlug(idStr) {
+            return (idStr || '').trim().replace(/[^a-zA-Z0-9-_]/g, '') || 'CASBO-RECORD';
+        }
+
+        function syncCasboIdFromTop(val) {
+            state.meta.casboId = val.trim();
+            document.getElementById('canvas-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
+            document.getElementById('seal-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
+            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+        }
+
+        function syncCasboIdFromCanvas(val) {
+            state.meta.casboId = val.trim();
+            document.getElementById('top-casbo-id').value = state.meta.casboId;
+            document.getElementById('seal-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
+            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+        }
+
+        function syncCompanyName(val) {
+            state.meta.companyName = val.trim();
+            document.getElementById('seal-company-name').textContent = state.meta.companyName || 'Recipient Company';
+            if (!state.meta.logoUrl) renderBrandLogoUI();
+            renderWebsiteCTA();
+        }
+
+        function syncAllHeroUI() {
+            document.getElementById('top-casbo-id').value = state.meta.casboId;
+            document.getElementById('canvas-casbo-id').textContent = state.meta.casboId;
+            document.getElementById('seal-casbo-id').textContent = state.meta.casboId;
+            document.getElementById('canvas-month').textContent = state.meta.month;
+            document.getElementById('canvas-company-name').textContent = state.meta.companyName;
+            document.getElementById('seal-company-name').textContent = state.meta.companyName;
+            document.getElementById('canvas-seo-desc').textContent = state.meta.seoDesc;
+
+            // Drawer inputs
+            document.getElementById('drawer-laurelUrl').value = state.meta.laurelUrl;
+            document.getElementById('drawer-logoUrl').value = state.meta.logoUrl;
+            document.getElementById('drawer-keywords').value = state.meta.keywords;
+            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+
+            // Laurel Emblem
+            const laurelEl = document.getElementById('canvas-laurel-img');
+            if (state.meta.laurelUrl) {
+                laurelEl.style.backgroundImage = `url('${state.meta.laurelUrl.replace(/'/g, "\\'")}')`;
+            }
+
+            renderBrandLogoUI();
+            renderWebsiteCTA();
+        }
+
+        function renderBrandLogoUI() {
+            const wrap = document.getElementById('canvas-brand-logo-wrap');
+            if (state.meta.logoUrl) {
+                wrap.innerHTML = `<img src="${escapeAttr(state.meta.logoUrl)}" alt="${escapeAttr(state.meta.companyName)} Logo" class="w-full h-full object-contain rounded-xl" onerror="this.parentElement.innerHTML='<span class=\\'font-display text-2xl font-bold text-white\\'>${escapeHTML((state.meta.companyName || 'C').charAt(0).toUpperCase())}</span>'">`;
+            } else {
+                const initial = (state.meta.companyName || 'C').charAt(0).toUpperCase();
+                wrap.innerHTML = `<span class="font-display text-3xl font-bold text-white">${escapeHTML(initial)}</span>`;
+            }
+        }
+
+        function renderWebsiteCTA() {
+            const cta = document.getElementById('canvas-website-cta');
+            if (state.meta.websiteUrl && state.meta.websiteUrl !== '#') {
+                cta.innerHTML = `<a href="${escapeAttr(state.meta.websiteUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 font-display text-xs font-semibold tracking-[0.2em] uppercase text-white transition-all">Visit ${escapeHTML(state.meta.companyName || 'Recipient')} &rarr;</a>`;
+            } else {
+                cta.innerHTML = `<span class="editor-only font-mono text-[10px] text-gray-600 uppercase tracking-widest">No website link set</span>`;
+            }
+        }
+
+        // ============================================================
+        // 3. ADAPTIVE ASPECT-RATIO BENTO LAYOUT ENGINE
+        // ============================================================
+        // Groups images dynamically based on their natural aspect ratios so:
+        // - Portrait + 2 Landscapes morph into a true asymmetric 2-col Bento cluster
+        // - Rows of 2-3 images use flex-grow = naturalRatio so every tile shares
+        //   identical height while preserving 100% of its natural aspect ratio!
+        function buildAdaptiveBentoHTML(items, blockIndex, isExport = false) {
+            const validItems = isExport ? items.filter(i => i.url) : items;
+            if (validItems.length === 0) return '';
+
+            const renderTile = (item, originalIdx, customStyle = '', isStacked = false) => {
+                const src = item.url || 'https://placehold.co/900x600/0d0d0d/555555?text=Click+to+Set+Image+URL';
+                const ratio = item.ratio && item.ratio > 0 ? item.ratio : 1.5;
+
+                const editOverlay = isExport ? '' : `
+                    <div class="editor-only absolute top-2.5 right-2.5 z-20 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/85 backdrop-blur-md p-1 rounded-lg border border-white/20">
+                        <button onclick="openAssetModal('bentoTile', ${blockIndex}, ${originalIdx})" class="px-2 py-1 rounded hover:bg-white/15 font-mono text-[9px] text-white uppercase tracking-wider" title="Edit URL & Caption">Edit</button>
+                        <button onclick="moveBentoTile(${blockIndex}, ${originalIdx}, -1)" ${originalIdx === 0 ? 'disabled' : ''} class="px-1.5 py-1 rounded hover:bg-white/15 disabled:opacity-30 text-gray-300 text-[10px]">&larr;</button>
+                        <button onclick="moveBentoTile(${blockIndex}, ${originalIdx}, 1)" ${originalIdx === items.length - 1 ? 'disabled' : ''} class="px-1.5 py-1 rounded hover:bg-white/15 disabled:opacity-30 text-gray-300 text-[10px]">&rarr;</button>
+                        <button onclick="removeBentoTile(${blockIndex}, ${originalIdx})" class="px-1.5 py-1 rounded hover:bg-red-500/30 text-red-400 text-[10px]">&times;</button>
+                    </div>`;
+
+                const onLoadAttr = isExport
+                    ? ''
+                    : `onload="captureBentoRatio(${blockIndex}, ${originalIdx}, this)"`;
+
+                // Preserve natural aspect ratio when stacked or solo
+                const imgWrapStyle = isStacked ? `aspect-ratio: ${ratio.toFixed(3)};` : `aspect-ratio: ${ratio.toFixed(3)};`;
+
+                return `
+                    <div class="bento-tile casbo-media-frame group" style="${customStyle}" data-ratio="${ratio.toFixed(3)}">
+                        ${editOverlay}
+                        <div class="bento-img-wrap" style="${imgWrapStyle}">
+                            <img src="${escapeAttr(src)}" alt="${escapeAttr(item.caption || state.meta.companyName)}" ${onLoadAttr} ${isExport ? 'loading="lazy"' : ''} onerror="this.src='https://placehold.co/800x600/0d0d0d/ef4444?text=Image+Load+Error'">
+                        </div>
+                        ${item.caption ? `<div class="px-3.5 py-2 bg-[#070707] border-t border-white/10 font-mono text-[10px] text-gray-400 tracking-wider truncate">${escapeHTML(item.caption)}</div>` : ''}
+                    </div>`;
+            };
+
+            let html = '<div class="bento-stack">';
+            let i = 0;
+
+            while (i < validItems.length) {
+                const remaining = validItems.length - i;
+                const item0 = validItems[i];
+                const r0 = item0.ratio || 1.5;
+
+                // Case 1: Single remaining item -> Full width, exact natural aspect ratio
+                if (remaining === 1) {
+                    html += `<div class="bento-row">${renderTile(item0, i, 'flex: 1 1 100%;')}</div>`;
+                    i += 1;
+                    continue;
+                }
+
+                // Case 2: Ultra-wide panoramic image (ratio >= 1.9) -> Give it its own full-width hero row
+                if (r0 >= 1.9) {
+                    html += `<div class="bento-row">${renderTile(item0, i, 'flex: 1 1 100%;')}</div>`;
+                    i += 1;
+                    continue;
+                }
+
+                // Case 3: Asymmetric Bento Cluster! If we have >= 3 items and one is a Portrait (ratio <= 0.88)
+                // pair that tall portrait next to 2 stacked landscape/square tiles!
+                if (remaining >= 3) {
+                    const group = [
+                        { item: validItems[i], idx: i, r: validItems[i].ratio || 1.5 },
+                        { item: validItems[i + 1], idx: i + 1, r: validItems[i + 1].ratio || 1.5 },
+                        { item: validItems[i + 2], idx: i + 2, r: validItems[i + 2].ratio || 1.5 }
+                    ];
+                    const portraitPos = group.findIndex(g => g.r <= 0.88);
+                    if (portraitPos !== -1) {
+                        const tall = group[portraitPos];
+                        const others = group.filter((_, idx) => idx !== portraitPos);
+                        // Compute proportional column widths so the tall tile height matches the 2 stacked tiles!
+                        const stackedHeightRatio = (1 / others[0].r) + (1 / others[1].r);
+                        const tallHeightRatio = 1 / tall.r;
+                        const colRightWeight = stackedHeightRatio / (tallHeightRatio + stackedHeightRatio);
+                        const colLeftWeight = 1 - colRightWeight;
+                        const leftFr = Math.max(0.75, Math.min(1.4, colLeftWeight * 2)).toFixed(2);
+                        const rightFr = Math.max(0.75, Math.min(1.4, colRightWeight * 2)).toFixed(2);
+
+                        const tallTileHTML = renderTile(tall.item, tall.idx, 'height: 100%;');
+                        const stackedHTML = `
+                            <div class="bento-subcol">
+                                ${renderTile(others[0].item, others[0].idx, '', true)}
+                                ${renderTile(others[1].item, others[1].idx, '', true)}
+                            </div>`;
+
+                        // Alternate left/right placement for visual rhythm
+                        const portraitOnLeft = (i % 2 === 0);
+                        const cols = portraitOnLeft ? `${leftFr}fr ${rightFr}fr` : `${rightFr}fr ${leftFr}fr`;
+                        html += `
+                            <div class="bento-asymmetric" style="--bento-cols: ${cols};">
+                                ${portraitOnLeft ? tallTileHTML + stackedHTML : stackedHTML + tallTileHTML}
+                            </div>`;
+                        i += 3;
+                        continue;
+                    }
+                }
+
+                // Case 4: Standard Justified Bento Row of 2 (or 3 if all 3 are compact/square)
+                let take = 2;
+                if (remaining === 3) {
+                    const r1 = validItems[i + 1].ratio || 1.5;
+                    const r2 = validItems[i + 2].ratio || 1.5;
+                    // Put 3 in one row only if none are ultra-wide
+                    if (r0 < 1.5 && r1 < 1.5 && r2 < 1.5) take = 3;
+                }
+
+                const rowSlice = [];
+                for (let k = 0; k < take; k++) {
+                    const cur = validItems[i + k];
+                    const curRatio = cur.ratio || 1.5;
+                    // Setting flex-grow to exact natural aspect ratio aligns row heights mathematically!
+                    rowSlice.push(renderTile(cur, i + k, `flex: ${curRatio.toFixed(4)} 1 0%;`));
+                }
+                html += `<div class="bento-row">${rowSlice.join('')}</div>`;
+                i += take;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function captureBentoRatio(blockIndex, tileIndex, imgEl) {
+            if (!imgEl.naturalWidth || !imgEl.naturalHeight) return;
+            const naturalRatio = imgEl.naturalWidth / imgEl.naturalHeight;
+            const item = state.blocks[blockIndex]?.items?.[tileIndex];
+            if (!item) return;
+            // Re-morph Bento layout automatically if natural aspect ratio differs significantly
+            if (!item.ratio || Math.abs(item.ratio - naturalRatio) > 0.04) {
+                item.ratio = Number(naturalRatio.toFixed(4));
+                renderAllBlocks();
+            }
+        }
+
+        // ============================================================
+        // 4. INLINE BLOCK RENDERER WITH INSERT-ANYWHERE DIVIDERS
+        // ============================================================
+        function renderInsertDivider(insertAtIndex) {
+            const isOpen = openInsertIndex === insertAtIndex;
+            return `
+                <div class="editor-only insert-divider ${isOpen ? 'open' : ''}">
+                    <div class="insert-divider-line"></div>
+                    <button onclick="toggleInsertMenu(${insertAtIndex})" class="insert-trigger-btn px-3 py-1 rounded-full bg-[#0a0a0a] border border-white/20 text-gray-300 hover:text-white hover:border-white/50 font-mono text-[10px] tracking-widest uppercase flex items-center gap-1.5 shadow-lg">
+                        <span class="text-sm leading-none">+</span>
+                        <span>Insert Here</span>
+                    </button>
+                    <div class="insert-menu ${isOpen ? '' : 'hidden'} absolute top-8 z-30 flex flex-wrap justify-center gap-1.5 p-2 rounded-2xl bg-[#0d0d0d] border border-white/20 shadow-2xl backdrop-blur-xl">
+                        <button onclick="insertBlockAt(${insertAtIndex}, 'richtext')" class="px-3 py-1.5 rounded-xl hover:bg-white/10 text-[11px] font-display font-semibold tracking-wider uppercase text-white transition-colors">Rich Text</button>
+                        <button onclick="insertBlockAt(${insertAtIndex}, 'image')" class="px-3 py-1.5 rounded-xl hover:bg-white/10 text-[11px] font-display font-semibold tracking-wider uppercase text-white transition-colors">Single Image</button>
+                        <button onclick="insertBlockAt(${insertAtIndex}, 'bento')" class="px-3 py-1.5 rounded-xl hover:bg-white/10 text-[11px] font-display font-semibold tracking-wider uppercase text-white transition-colors">Bento Stack</button>
+                        <button onclick="insertBlockAt(${insertAtIndex}, 'quote')" class="px-3 py-1.5 rounded-xl hover:bg-white/10 text-[11px] font-display font-semibold tracking-wider uppercase text-white transition-colors">Client Quote</button>
+                    </div>
+                </div>`;
+        }
+
+        function toggleInsertMenu(idx) {
+            openInsertIndex = openInsertIndex === idx ? null : idx;
+            renderAllBlocks();
+        }
+
+        function renderAllBlocks() {
+            const container = document.getElementById('blocks-container');
+            container.innerHTML = '';
+            const isPreview = document.body.classList.contains('preview-mode');
+
+            // Top insertion point (Index 0)
+            container.insertAdjacentHTML('beforeend', renderInsertDivider(0));
+
+            state.blocks.forEach((block, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'editor-block p-2 sm:p-3 my-2';
+                wrapper.dataset.blockId = block.id;
+
+                // Compact Floating Action Bar (Hover/Focus Only)
+                const floatingBar = `
+                    <div class="editor-only block-floating-bar flex flex-wrap items-center justify-between gap-2 mb-2.5 px-2.5 py-1.5 rounded-xl bg-[#0c0c0c]/95 border border-white/15 backdrop-blur-md">
+                        <div class="flex items-center gap-1 flex-wrap">
+                            ${block.type === 'richtext' ? `
+                                <button onmousedown="event.preventDefault(); execFormat('bold')" class="px-2 py-0.5 rounded hover:bg-white/15 text-xs font-bold text-white" title="Bold">B</button>
+                                <button onmousedown="event.preventDefault(); execFormat('italic')" class="px-2 py-0.5 rounded hover:bg-white/15 text-xs italic text-gray-200" title="Italic">I</button>
+                                <button onmousedown="event.preventDefault(); execFormat('underline')" class="px-2 py-0.5 rounded hover:bg-white/15 text-xs underline text-gray-200" title="Underline">U</button>
+                                <span class="w-px h-3.5 bg-white/15 mx-0.5"></span>
+                                <button onmousedown="event.preventDefault(); formatBlockTag('H2')" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] font-display font-bold text-gray-300">H2</button>
+                                <button onmousedown="event.preventDefault(); formatBlockTag('H3')" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] font-display font-semibold text-gray-300">H3</button>
+                                <button onmousedown="event.preventDefault(); formatBlockTag('P')" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] text-gray-400">P</button>
+                                <span class="w-px h-3.5 bg-white/15 mx-0.5"></span>
+                                <button onmousedown="event.preventDefault(); wrapInlineCode()" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] font-mono text-gray-200">&lt;/&gt;</button>
+                                <button onmousedown="event.preventDefault(); formatBlockTag('BLOCKQUOTE')" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] italic text-gray-300">&ldquo;&rdquo;</button>
+                                <button onmousedown="event.preventDefault(); execFormat('insertUnorderedList')" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] text-gray-300">&bull; List</button>
+                                <button onmousedown="event.preventDefault(); openLinkModal()" class="px-1.5 py-0.5 rounded hover:bg-white/15 text-[10px] text-sky-400">Link</button>
+                            ` : block.type === 'image' ? `
+                                <button onclick="openAssetModal('singleImage', ${index})" class="px-2.5 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[10px] font-mono uppercase tracking-wider text-white">Edit Image URL &amp; Caption</button>
+                            ` : block.type === 'bento' ? `
+                                <span class="font-mono text-[9px] text-gray-400 uppercase tracking-widest px-1">Adaptive Bento Stack</span>
+                                <button onclick="addBentoTile(${index})" class="px-2.5 py-0.5 rounded bg-white text-black hover:bg-gray-200 text-[10px] font-display font-bold uppercase tracking-wider ml-1">+ Add Image</button>
+                            ` : `
+                                <span class="font-mono text-[9px] text-gray-400 uppercase tracking-widest px-1">Client Quote</span>
+                            `}
+                        </div>
+                        <div class="flex items-center gap-1 ml-auto">
+                            <button onclick="moveBlock(${index}, -1)" ${index === 0 ? 'disabled' : ''} class="p-1 rounded hover:bg-white/15 disabled:opacity-25 text-gray-300" title="Move Up">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                            </button>
+                            <button onclick="moveBlock(${index}, 1)" ${index === state.blocks.length - 1 ? 'disabled' : ''} class="p-1 rounded hover:bg-white/15 disabled:opacity-25 text-gray-300" title="Move Down">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <button onclick="deleteBlock(${index})" class="p-1 rounded hover:bg-red-500/25 text-red-400 ml-1" title="Delete">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>`;
+
+                let bodyHTML = '';
+
+                if (block.type === 'richtext') {
+                    bodyHTML = `
+                        <div class="rich-text text-base md:text-lg px-1"
+                             data-inline-editable="true"
+                             contenteditable="${!isPreview}"
+                             oninput="state.blocks[${index}].html = this.innerHTML">${block.html}</div>`;
+                } else if (block.type === 'image') {
+                    const src = block.url || 'https://placehold.co/1200x675/0d0d0d/555555?text=Click+to+Set+Single+Image+URL';
+                    bodyHTML = `
+                        <figure class="w-full relative group">
+                            <div class="casbo-media-frame cursor-pointer" onclick="${!isPreview ? `openAssetModal('singleImage', ${index})` : ''}">
+                                <img src="${escapeAttr(src)}" alt="${escapeAttr(block.caption || state.meta.companyName)}" class="w-full h-auto block" onerror="this.src='https://placehold.co/1200x675/0d0d0d/ef4444?text=Invalid+Image+URL'">
+                            </div>
+                            ${block.caption ? `<figcaption class="mt-3 text-center font-mono text-[11px] text-gray-500 tracking-wider">${escapeHTML(block.caption)}</figcaption>` : ''}
+                        </figure>`;
+                } else if (block.type === 'bento') {
+                    bodyHTML = `
+                        ${buildAdaptiveBentoHTML(block.items, index, false)}
+                        <div class="editor-only mt-3 flex justify-center">
+                            <button onclick="addBentoTile(${index})" class="px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/15 font-mono text-[10px] tracking-widest uppercase text-gray-300 hover:text-white transition-colors">
+                                + Add Image to Stack
+                            </button>
+                        </div>`;
+                } else if (block.type === 'quote') {
+                    bodyHTML = `
+                        <div class="p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/10 border-l-2 border-l-casbo-accent">
+                            <p class="font-arvo text-xl md:text-2xl text-white leading-relaxed italic mb-6 px-1 -mx-1"
+                               data-inline-editable="true"
+                               contenteditable="${!isPreview}"
+                               oninput="state.blocks[${index}].quote = this.textContent.trim()">${escapeHTML(block.quote)}</p>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 font-mono text-xs uppercase tracking-widest">
+                                <span class="text-white font-semibold px-1 -mx-1" data-inline-editable="true" contenteditable="${!isPreview}" oninput="state.blocks[${index}].author = this.textContent.trim()">${escapeHTML(block.author)}</span>
+                                <span class="hidden sm:inline text-gray-600">&bull;</span>
+                                <span class="text-gray-500 px-1 -mx-1" data-inline-editable="true" contenteditable="${!isPreview}" oninput="state.blocks[${index}].role = this.textContent.trim()">${escapeHTML(block.role)}</span>
+                            </div>
+                        </div>`;
+                }
+
+                wrapper.innerHTML = floatingBar + bodyHTML;
+                container.appendChild(wrapper);
+
+                // Insertion divider directly after this block
+                container.insertAdjacentHTML('beforeend', renderInsertDivider(index + 1));
+            });
+        }
+
+        // ============================================================
+        // 5. BLOCK MUTATIONS & ASSET MODALS
+        // ============================================================
+        function insertBlockAt(pos, type) {
+            openInsertIndex = null;
+            const id = 'blk-' + Date.now();
+            let newBlock;
+            if (type === 'richtext') {
+                newBlock = { id, type: 'richtext', html: '<h3>New Section</h3><p>Write your narrative here...</p>' };
+            } else if (type === 'image') {
+                newBlock = { id, type: 'image', url: '', caption: '' };
+            } else if (type === 'bento') {
+                newBlock = {
+                    id,
+                    type: 'bento',
+                    items: [
+                        { url: '', caption: '', ratio: 1.5 },
+                        { url: '', caption: '', ratio: 1.5 }
+                    ]
+                };
+            } else if (type === 'quote') {
+                newBlock = { id, type: 'quote', quote: 'Click to edit client quote...', author: 'Client Name', role: 'Title / Role' };
+            }
+            state.blocks.splice(pos, 0, newBlock);
+            renderAllBlocks();
+
+            // Immediately prompt for URL if user inserted a Single Image
+            if (type === 'image') {
+                openAssetModal('singleImage', pos);
+            } else {
+                showToast('Section inserted', 'success');
+            }
+        }
+
+        function moveBlock(index, dir) {
+            const target = index + dir;
+            if (target < 0 || target >= state.blocks.length) return;
+            [state.blocks[index], state.blocks[target]] = [state.blocks[target], state.blocks[index]];
+            renderAllBlocks();
+        }
+
+        function deleteBlock(index) {
+            state.blocks.splice(index, 1);
+            renderAllBlocks();
+            showToast('Section removed', 'info');
+        }
+
+        function addBentoTile(blockIndex) {
+            const newIdx = state.blocks[blockIndex].items.length;
+            state.blocks[blockIndex].items.push({ url: '', caption: '', ratio: 1.5 });
+            renderAllBlocks();
+            openAssetModal('bentoTile', blockIndex, newIdx);
+        }
+
+        function removeBentoTile(blockIndex, tileIndex) {
+            state.blocks[blockIndex].items.splice(tileIndex, 1);
+            renderAllBlocks();
+        }
+
+        function moveBentoTile(blockIndex, tileIndex, dir) {
+            const items = state.blocks[blockIndex].items;
+            const target = tileIndex + dir;
+            if (target < 0 || target >= items.length) return;
+            [items[tileIndex], items[target]] = [items[target], items[tileIndex]];
+            renderAllBlocks();
+        }
+
+        // Unified Asset Modal for Laurel, Logo, Website, Single Image, Bento Tile
+        function openAssetModal(kind, blockIndex = null, tileIndex = null) {
+            if (document.body.classList.contains('preview-mode')) return;
+            activeAssetContext = { kind, blockIndex, tileIndex };
+
+            const titleEl = document.getElementById('asset-modal-title');
+            const descEl = document.getElementById('asset-modal-desc');
+            const labelEl = document.getElementById('asset-url-label');
+            const urlInput = document.getElementById('asset-modal-url');
+            const capWrap = document.getElementById('asset-caption-wrap');
+            const capInput = document.getElementById('asset-modal-caption');
+
+            capWrap.classList.add('hidden');
+
+            if (kind === 'laurel') {
+                titleEl.textContent = 'Recipient Laurel URL';
+                descEl.textContent = 'Displays as the protected centerpiece Laurel at the top of the page AND serves as the WhatsApp/Facebook Open Graph social card image.';
+                labelEl.textContent = 'Raw Laurel Image URL (Required)';
+                urlInput.value = state.meta.laurelUrl;
+            } else if (kind === 'logo') {
+                titleEl.textContent = 'Recipient Company Brand Logo';
+                descEl.textContent = 'Paste the raw image URL for the recipient company logo. Leave blank to display a sleek monogram initial.';
+                labelEl.textContent = 'Company Logo URL (Optional)';
+                urlInput.value = state.meta.logoUrl;
+            } else if (kind === 'website') {
+                titleEl.textContent = 'Recipient Website URL';
+                descEl.textContent = 'Destination URL for the hero "Visit Company" button.';
+                labelEl.textContent = 'Website URL (Optional)';
+                urlInput.value = state.meta.websiteUrl;
+            } else if (kind === 'singleImage') {
+                const blk = state.blocks[blockIndex];
+                titleEl.textContent = 'Single Image Settings';
+                descEl.textContent = 'Renders full-width with 8px rounded edges, a crisp outline, and its natural aspect ratio.';
+                labelEl.textContent = 'Raw Image URL';
+                urlInput.value = blk.url || '';
+                capInput.value = blk.caption || '';
+                capWrap.classList.remove('hidden');
+            } else if (kind === 'bentoTile') {
+                const tile = state.blocks[blockIndex].items[tileIndex];
+                titleEl.textContent = `Bento Tile #${tileIndex + 1}`;
+                descEl.textContent = 'The Bento Stack automatically reads this image’s natural aspect ratio and morphs the grid to match.';
+                labelEl.textContent = 'Raw Image URL';
+                urlInput.value = tile.url || '';
+                capInput.value = tile.caption || '';
+                capWrap.classList.remove('hidden');
+            }
+
+            const modal = document.getElementById('asset-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            urlInput.focus();
+        }
+
+        function closeAssetModal() {
+            const modal = document.getElementById('asset-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            activeAssetContext = null;
+        }
+
+        function saveAssetModal() {
+            if (!activeAssetContext) return;
+            const urlVal = document.getElementById('asset-modal-url').value.trim();
+            const capVal = document.getElementById('asset-modal-caption').value.trim();
+            const { kind, blockIndex, tileIndex } = activeAssetContext;
+
+            if (kind === 'laurel') {
+                state.meta.laurelUrl = urlVal;
+                syncAllHeroUI();
+            } else if (kind === 'logo') {
+                state.meta.logoUrl = urlVal;
+                syncAllHeroUI();
+            } else if (kind === 'website') {
+                state.meta.websiteUrl = urlVal;
+                syncAllHeroUI();
+            } else if (kind === 'singleImage') {
+                state.blocks[blockIndex].url = urlVal;
+                state.blocks[blockIndex].caption = capVal;
+                renderAllBlocks();
+            } else if (kind === 'bentoTile') {
+                const tile = state.blocks[blockIndex].items[tileIndex];
+                tile.url = urlVal;
+                tile.caption = capVal;
+                renderAllBlocks();
+            }
+
+            closeAssetModal();
+            showToast('Updated', 'success');
+        }
+
+        // ============================================================
+        // 6. RICH TEXT & PREVIEW CONTROLS
+        // ============================================================
+        function execFormat(cmd) { document.execCommand(cmd, false, null); }
+        function formatBlockTag(tag) { document.execCommand('formatBlock', false, tag); }
+        function wrapInlineCode() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return;
+            const range = sel.getRangeAt(0);
+            const code = document.createElement('code');
+            code.textContent = range.toString();
+            range.deleteContents();
+            range.insertNode(code);
+        }
+
+        function openLinkModal() {
+            const sel = window.getSelection();
+            if (sel.rangeCount > 0) savedSelectionRange = sel.getRangeAt(0).cloneRange();
+            document.getElementById('link-modal-url').value = 'https://';
+            const modal = document.getElementById('link-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('link-modal-url').focus();
+        }
+        function closeLinkModal() {
+            const modal = document.getElementById('link-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        function applyHyperlink() {
+            const url = document.getElementById('link-modal-url').value.trim();
+            closeLinkModal();
+            if (!url || !savedSelectionRange) return;
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedSelectionRange);
+            document.execCommand('createLink', false, url);
+            if (sel.anchorNode?.parentElement?.tagName === 'A') {
+                sel.anchorNode.parentElement.target = '_blank';
+                sel.anchorNode.parentElement.rel = 'noopener noreferrer';
+            }
+        }
+
+        function togglePreviewMode() {
+            document.body.classList.toggle('preview-mode');
+            const isPreview = document.body.classList.contains('preview-mode');
+            document.getElementById('preview-btn-text').textContent = isPreview ? 'Edit' : 'Preview';
+            document.querySelectorAll('[data-inline-editable="true"]').forEach(el => {
+                el.contentEditable = isPreview ? 'false' : 'true';
+            });
+            closeSeoDrawer();
+        }
+
+        function openSeoDrawer() {
+            syncAllHeroUI();
+            document.getElementById('seo-drawer-backdrop').classList.remove('hidden');
+            document.getElementById('seo-drawer').classList.remove('translate-x-full');
+        }
+        function closeSeoDrawer() {
+            document.getElementById('seo-drawer-backdrop').classList.add('hidden');
+            document.getElementById('seo-drawer').classList.add('translate-x-full');
+        }
+
+        // ============================================================
+        // 7. 1:1 STANDALONE HTML EXPORT (SEO + WHATSAPP OG + BENTO)
+        // ============================================================
+        function exportStandaloneHTML() {
+            const meta = state.meta;
+            if (!meta.casboId || !meta.companyName || !meta.laurelUrl) {
+                showToast('C.A.S.B.O Number, Company Name & Recipient Laurel URL are required!', 'error');
+                openSeoDrawer();
+                return;
+            }
+
+            const safeSlug = getSafeSlug(meta.casboId);
+            const canonicalUrl = `https://cleo876.github.io/casbo/ledger/${safeSlug}.html`;
+            const pageTitle = `${meta.companyName} | C.A.S.B.O Official Record (${meta.casboId})`;
+            const keywords = `${meta.companyName}, ${meta.casboId}, C.A.S.B.O, Final Render Animation Studio, F.R.A.S, Forge, ${meta.month}, ${meta.keywords}`;
+
+            const renderedBlocksHTML = state.blocks.map(block => {
+                if (block.type === 'richtext') {
+                    return `<section class="rich-text text-base md:text-lg">${block.html}</section>`;
+                } else if (block.type === 'image') {
+                    if (!block.url) return '';
+                    return `
+                        <figure class="w-full">
+                            <div class="casbo-media-frame">
+                                <img src="${escapeAttr(block.url)}" alt="${escapeAttr(block.caption || meta.companyName)}" class="w-full h-auto block" loading="lazy">
+                            </div>
+                            ${block.caption ? `<figcaption class="mt-3 text-center font-mono text-[11px] text-gray-500 tracking-wider">${escapeHTML(block.caption)}</figcaption>` : ''}
+                        </figure>`;
+                } else if (block.type === 'bento') {
+                    return `<section>${buildAdaptiveBentoHTML(block.items, 0, true)}</section>`;
+                } else if (block.type === 'quote') {
+                    return `
+                        <section class="p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/10 border-l-2 border-l-casbo-accent">
+                            <p class="font-arvo text-xl md:text-2xl text-white leading-relaxed italic mb-6">&ldquo;${escapeHTML(block.quote)}&rdquo;</p>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 font-mono text-xs uppercase tracking-widest">
+                                <span class="text-white font-semibold">${escapeHTML(block.author)}</span>
+                                <span class="hidden sm:inline text-gray-600">&bull;</span>
+                                <span class="text-gray-500">${escapeHTML(block.role)}</span>
+                            </div>
+                        </section>`;
+                }
+                return '';
+            }).join('\n            ');
+
+            const logoHTML = meta.logoUrl
+                ? `<img src="${escapeAttr(meta.logoUrl)}" alt="${escapeAttr(meta.companyName)} Logo" class="w-full h-full object-contain rounded-xl">`
+                : `<span class="font-display text-3xl font-bold text-white">${escapeHTML((meta.companyName || 'C').charAt(0).toUpperCase())}</span>`;
+
+            const websiteCTA = (meta.websiteUrl && meta.websiteUrl !== '#')
+                ? `<a href="${escapeAttr(meta.websiteUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 font-display text-xs font-semibold tracking-[0.2em] uppercase text-white transition-all">Visit ${escapeHTML(meta.companyName)} &rarr;</a>`
+                : '';
+
+            const jsonLd = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": pageTitle,
+                "description": meta.seoDesc,
+                "image": meta.laurelUrl,
+                "author": { "@type": "Organization", "name": "Final Render Animation Studio & Forge" },
+                "publisher": { "@type": "Organization", "name": "C.A.S.B.O" },
+                "about": {
+                    "@type": "Organization",
+                    "name": meta.companyName,
+                    "url": meta.websiteUrl || canonicalUrl
+                }
+            }, null, 2);
+
+            const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO Meta Tags -->
+    <title>${escapeHTML(pageTitle)}</title>
+    <meta name="title" content="${escapeAttr(pageTitle)}">
+    <meta name="description" content="${escapeAttr(meta.seoDesc)}">
+    <meta name="keywords" content="${escapeAttr(keywords)}">
+    <meta name="author" content="Final Render Animation Studio (F.R.A.S) &amp; Forge">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="${escapeAttr(canonicalUrl)}">
+
+    <!-- Open Graph / WhatsApp / Facebook (Recipient Laurel Injected) -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="C.A.S.B.O Official Ledger">
+    <meta property="og:url" content="${escapeAttr(canonicalUrl)}">
+    <meta property="og:title" content="${escapeAttr(pageTitle)}">
+    <meta property="og:description" content="${escapeAttr(meta.seoDesc)}">
+    <meta property="og:image" content="${escapeAttr(meta.laurelUrl)}">
+    <meta property="og:image:secure_url" content="${escapeAttr(meta.laurelUrl)}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="${escapeAttr(meta.companyName)} C.A.S.B.O Recipient Laurel">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="${escapeAttr(canonicalUrl)}">
+    <meta name="twitter:title" content="${escapeAttr(pageTitle)}">
+    <meta name="twitter:description" content="${escapeAttr(meta.seoDesc)}">
+    <meta name="twitter:image" content="${escapeAttr(meta.laurelUrl)}">
+
+    <!-- Structured Data for Google Company Indexing -->
+    <script type="application/ld+json">
+${jsonLd}
+    <\/script>
+
+    <link rel="icon" type="image/png" href="https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"><\/script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { casbo: { accent: '#666666', bg: '#030303', surface: '#0a0a0a' } },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'], arvo: ['Arvo', 'serif'] },
+                    animation: { 'aurora': 'aurora 20s linear infinite', 'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards' },
+                    keyframes: {
+                        aurora: {
+                            '0%, 100%': { transform: 'translate(0, 0) scale(1) rotate(0deg)' },
+                            '33%': { transform: 'translate(5%, -5%) scale(1.05) rotate(2deg)' },
+                            '66%': { transform: 'translate(-5%, 5%) scale(0.95) rotate(-2deg)' }
+                        },
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    <\/script>
+    <style>
+        body { background-color: #030303; color: #ffffff; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #666666; border-radius: 10px; }
+        .vibrancy-layer { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+        .glow-orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.14; }
+        .glow-blue { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(14,165,233,0.8) 0%, rgba(0,0,0,0) 70%); }
+        .glow-purple { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(0,0,0,0) 70%); animation-delay: -10s; }
+        .rich-text h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; color: #ffffff; margin: 1.5rem 0 0.75rem; letter-spacing: -0.02em; }
+        .rich-text h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 600; color: #f3f4f6; margin: 1.25rem 0 0.5rem; }
+        .rich-text p, .rich-text div { margin-bottom: 1rem; line-height: 1.75; color: #d1d5db; font-weight: 300; }
+        .rich-text p:last-child { margin-bottom: 0; }
+        .rich-text strong, .rich-text b { color: #ffffff; font-weight: 600; }
+        .rich-text i, .rich-text em { font-style: italic; color: #e5e7eb; }
+        .rich-text u { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #666666; }
+        .rich-text a { color: #ffffff; text-decoration: underline; text-decoration-color: #666666; text-underline-offset: 4px; font-weight: 500; transition: all 0.2s ease; }
+        .rich-text a:hover { text-decoration-color: #ffffff; }
+        .rich-text code { background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.18); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85em; color: #f3f4f6; }
+        .rich-text blockquote { border-left: 2px solid #666666; padding-left: 1.25rem; font-style: italic; color: #9ca3af; margin: 1.25rem 0; }
+        .rich-text ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
+        .rich-text ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #d1d5db; }
+        .rich-text li { margin-bottom: 0.4rem; }
+        .casbo-media-frame { border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.16); overflow: hidden; background: rgba(255, 255, 255, 0.02); }
+        .bento-stack { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+        .bento-row { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+        @media (min-width: 768px) { .bento-row { flex-direction: row; align-items: stretch; } }
+        .bento-tile { position: relative; min-width: 0; display: flex; flex-direction: column; }
+        .bento-tile .bento-img-wrap { position: relative; width: 100%; height: 100%; overflow: hidden; flex: 1; }
+        .bento-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .bento-asymmetric { display: grid; grid-template-columns: 1fr; gap: 14px; width: 100%; }
+        @media (min-width: 768px) { .bento-asymmetric { grid-template-columns: var(--bento-cols, 1fr 1fr); align-items: stretch; } }
+        .bento-subcol { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+        ::selection { background: #ffffff; color: #000000; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+    <div class="vibrancy-layer">
+        <div class="glow-orb glow-blue animate-aurora"></div>
+        <div class="glow-orb glow-purple animate-aurora"></div>
+    </div>
+
+    <nav class="fixed w-full z-50 border-b border-white/5 bg-[#030303]/80 backdrop-blur-md">
+        <div class="w-full px-6 md:px-10 h-20 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-3 group">
+                <div class="w-7 h-7 mix-blend-screen pointer-events-none select-none transition-transform group-hover:scale-105"
+                     style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                     oncontextmenu="return false;" ondragstart="return false;" role="img" aria-label="C.A.S.B.O Laurel"></div>
+                <span class="font-display text-lg font-bold tracking-widest uppercase text-white">C.A.S.B.O</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="../ledger.html" class="font-display text-[11px] font-semibold tracking-[0.2em] uppercase text-gray-300 hover:text-white transition-colors">&larr; The Ledger</a>
+                <a href="https://frasmedia.academy/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline font-display text-[11px] font-semibold tracking-[0.2em] uppercase text-gray-500 hover:text-white transition-colors">F.R.A.S Studio</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-4xl mx-auto px-6 md:px-10 pt-32 pb-24 animate-fade-in">
+        <header class="flex flex-col items-center text-center mb-16 pb-14 border-b border-white/10">
+            <div class="w-full max-w-[23rem] mb-10">
+                <div class="w-full aspect-[4/3] drop-shadow-2xl mix-blend-screen pointer-events-none select-none"
+                     style="background-image: url('${meta.laurelUrl.replace(/'/g, "\\'")}'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                     oncontextmenu="return false;" ondragstart="return false;" role="img" aria-label="${escapeAttr(meta.companyName)} C.A.S.B.O Laurel"></div>
+            </div>
+
+            <div class="w-full max-w-3xl rounded-2xl bg-white/[0.025] border border-white/10 backdrop-blur-md p-6 sm:p-8 md:p-10 mb-8 shadow-2xl">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 text-center sm:text-left">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-white/15 bg-black/60 flex items-center justify-center overflow-hidden shadow-xl p-2 shrink-0">
+                        ${logoHTML}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-mono text-[10px] tracking-[0.18em] uppercase">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                                Verified Recipient
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-gray-300 tracking-[0.18em] uppercase">${escapeHTML(meta.casboId)}</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-casbo-accent tracking-[0.18em] uppercase">${escapeHTML(meta.month)}</span>
+                        </div>
+                        <h1 class="font-arvo text-2xl sm:text-4xl font-bold text-white leading-tight">${escapeHTML(meta.companyName)}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <p class="font-sans text-gray-400 text-base md:text-lg font-light leading-relaxed max-w-2xl mb-7">${escapeHTML(meta.seoDesc)}</p>
+            ${websiteCTA}
+        </header>
+
+        <article class="space-y-12">
+            ${renderedBlocksHTML}
+        </article>
+
+        <section class="mt-20 p-8 md:p-10 rounded-2xl bg-white/[0.02] border border-white/10 text-center">
+            <div class="inline-flex items-center justify-center gap-2.5 text-green-400 mb-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="font-display text-xs font-bold tracking-[0.2em] uppercase">Official C.A.S.B.O Verification</span>
+            </div>
+            <p class="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed mb-6">
+                This record certifies that <strong class="text-white">${escapeHTML(meta.companyName)}</strong> was selected and elevated at zero cost by <strong class="text-white">Final Render Animation Studio</strong> &amp; <strong class="text-white">Forge&trade;</strong>.
+            </p>
+            <div class="inline-block px-5 py-2 rounded-lg bg-black border border-white/10 font-mono text-xs text-gray-300 tracking-[0.25em]">${escapeHTML(meta.casboId)}</div>
+        </section>
+    </main>
+
+    <footer class="relative z-10 border-t border-casbo-accent/20 bg-casbo-surface/50">
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-12 py-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 mix-blend-screen pointer-events-none select-none opacity-60"
+                     style="background-image: url('https://github.com/Cleo876/casbo/blob/main/White%20on%20Black%20Laurel%20-%20C.A.S.B.O_Creation%20Logo.png?raw=true'); background-size: contain; background-position: center; background-repeat: no-repeat;"
+                     oncontextmenu="return false;" ondragstart="return false;"></div>
+                <span class="font-display text-sm font-bold tracking-widest text-white uppercase">C.A.S.B.O</span>
+            </div>
+            <p class="text-xs font-light text-gray-600 md:text-right">A joint pro bono initiative by Final Render Animation Studio &amp; Forge. Not a registered charity.</p>
+        </div>
+    </footer>
+</body>
+</html>`;
+
+            triggerDownload(`${safeSlug}.html`, fullHTML, 'text/html');
+            showToast(`Exported ${safeSlug}.html — upload to /ledger/`, 'success');
+        }
+
+        // ============================================================
+        // 8. LEDGER JSON SYNC & DRAFT SAVE/LOAD
+        // ============================================================
+        function copyLedgerJSON() {
+            const meta = state.meta;
+            const entry = {
+                badgeId: meta.casboId,
+                month: meta.month,
+                name: meta.companyName,
+                logoUrl: meta.logoUrl || null,
+                description: meta.seoDesc,
+                link: meta.websiteUrl || '#'
+            };
+            const ta = document.createElement('textarea');
+            ta.value = JSON.stringify(entry, null, 4);
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('Ledger JSON entry copied to clipboard', 'success');
+        }
+
+        function saveDraftJSON() {
+            const safeSlug = getSafeSlug(state.meta.casboId);
+            triggerDownload(`${safeSlug}-draft.json`, JSON.stringify(state, null, 2), 'application/json');
+            showToast('Draft saved', 'info');
+        }
+
+        function loadDraftJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.meta && Array.isArray(parsed.blocks)) {
+                        state.meta = { ...state.meta, ...parsed.meta };
+                        state.blocks = parsed.blocks;
+                        syncAllHeroUI();
+                        renderAllBlocks();
+                        closeSeoDrawer();
+                        showToast('Draft loaded', 'success');
+                    } else {
+                        showToast('Invalid draft file format', 'error');
+                    }
+                } catch {
+                    showToast('Failed to parse draft JSON', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ============================================================
+        // 9. UTILITIES
+        // ============================================================
+        function triggerDownload(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHTML(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function escapeAttr(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        let toastTimer;
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.className = 'px-5 py-3.5 rounded-xl flex items-center gap-3 backdrop-blur-md shadow-2xl border show ';
+            if (type === 'error') toast.className += 'bg-red-500/15 border-red-500/40 text-red-300';
+            else if (type === 'info') toast.className += 'bg-white/10 border-white/25 text-white';
+            else toast.className += 'bg-green-500/15 border-green-500/35 text-green-300';
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+    </script>
+</body>
+</html>
