@@ -1,82 +1,83 @@
 name: Auto-Update Ledger Recipients JSON
 
 on:
-push:
-branches: [ main ]
-paths:
-- 'ledger/*.html'
-workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ledger/*.html'
+  workflow_dispatch:
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-build-ledger-json:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout repository
-uses: actions/checkout@v4
+  build-ledger-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Scan ledger/*.html and generate ledger/recipients.json
-    run: |
-      node -e '
-        const fs = require("fs");
-        const path = require("path");
+      - name: Generate ledger/recipients.json
+        run: |
+          node << 'EOF'
+          const fs = require("fs");
+          const path = require("path");
 
-        const ledgerDir = path.join(process.cwd(), "ledger");
-        if (!fs.existsSync(ledgerDir)) {
-          console.log("No ledger/ directory found.");
-          process.exit(0);
-        }
-
-        const files = fs.readdirSync(ledgerDir).filter(f => f.endsWith(".html"));
-        const recipients = [];
-
-        const parseMonthDate = (monthStr) => {
-          const parsed = Date.parse("1 " + (monthStr || ""));
-          return isNaN(parsed) ? 0 : parsed;
-        };
-
-        for (const file of files) {
-          const filePath = path.join(ledgerDir, file);
-          const html = fs.readFileSync(filePath, "utf8");
-          const match = html.match(/<script\s+id=["\x27]casbo-record-meta["\x27]\s+type=["\x27]application\/json["\x27]>([\s\S]*?)<\/script>/i);
-
-          if (match && match[1]) {
-            try {
-              const meta = JSON.parse(match[1].trim());
-              recipients.push({
-                badgeId: meta.badgeId || path.basename(file, ".html"),
-                month: meta.month || "Unknown Date",
-                name: meta.name || "Unnamed Recipient",
-                logoUrl: meta.logoUrl || null,
-                description: meta.description || "",
-                link: meta.link || "#",
-                pageUrl: `ledger/${file}`
-              });
-            } catch (err) {
-              console.warn(`Skipping ${file}: Invalid JSON in casbo-record-meta`, err.message);
-            }
-          } else {
-            console.warn(`Skipping ${file}: Missing <script id="casbo-record-meta"> block.`);
+          const ledgerDir = path.join(process.cwd(), "ledger");
+          if (!fs.existsSync(ledgerDir)) {
+            console.log("No ledger/ directory found yet. Skipping.");
+            process.exit(0);
           }
-        }
 
-        // Sort newest month first; tie-break alphabetically by badgeId descending
-        recipients.sort((a, b) => {
-          const diff = parseMonthDate(b.month) - parseMonthDate(a.month);
-          if (diff !== 0) return diff;
-          return String(b.badgeId).localeCompare(String(a.badgeId));
-        });
+          const files = fs.readdirSync(ledgerDir).filter((f) => f.endsWith(".html"));
+          const recipients = [];
 
-        const outPath = path.join(ledgerDir, "recipients.json");
-        fs.writeFileSync(outPath, JSON.stringify(recipients, null, 2) + "\n", "utf8");
-        console.log(`Generated ledger/recipients.json with ${recipients.length} recipient(s).`);
-      '
+          const parseMonthDate = (monthStr) => {
+            const parsed = Date.parse("1 " + (monthStr || ""));
+            return isNaN(parsed) ? 0 : parsed;
+          };
 
-  - name: Commit updated recipients.json
-    run: |
-      git config user.name "C.A.S.B.O Archive Bot"
-      git config user.email "actions@github.com"
-      git add ledger/recipients.json
-      git diff --staged --quiet || (git commit -m "Auto-update ledger/recipients.json" && git push)
+          for (const file of files) {
+            const html = fs.readFileSync(path.join(ledgerDir, file), "utf8");
+            const match = html.match(/<script\s+id=["']casbo-record-meta["']\s+type=["']application\/json["']>([\s\S]*?)<\/script>/i);
+
+            if (match && match[1]) {
+              try {
+                const meta = JSON.parse(match[1].trim());
+                recipients.push({
+                  badgeId: meta.badgeId || path.basename(file, ".html"),
+                  month: meta.month || "Unknown Date",
+                  name: meta.name || "Unnamed Recipient",
+                  logoUrl: meta.logoUrl || null,
+                  description: meta.description || "",
+                  link: meta.link || "#",
+                  pageUrl: `ledger/${file}`
+                });
+              } catch (err) {
+                console.warn(`Skipping ${file}: Invalid JSON`, err.message);
+              }
+            }
+          }
+
+          recipients.sort((a, b) => {
+            const diff = parseMonthDate(b.month) - parseMonthDate(a.month);
+            return diff !== 0 ? diff : String(b.badgeId).localeCompare(String(a.badgeId));
+          });
+
+          fs.writeFileSync(
+            path.join(ledgerDir, "recipients.json"),
+            JSON.stringify(recipients, null, 2) + "\n",
+            "utf8"
+          );
+          console.log(`Updated ledger/recipients.json with ${recipients.length} recipient(s).`);
+          EOF
+
+      - name: Commit updated recipients.json
+        run: |
+          if [ -f "ledger/recipients.json" ]; then
+            git config user.name "C.A.S.B.O Archive Bot"
+            git config user.email "actions@github.com"
+            git add ledger/recipients.json
+            git diff --staged --quiet || (git commit -m "Auto-update ledger/recipients.json" && git push)
+          fi
