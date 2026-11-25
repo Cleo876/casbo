@@ -466,7 +466,7 @@
             <!-- URL Preview -->
             <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
                 <span class="block font-mono text-[9px] text-gray-500 uppercase tracking-widest mb-1">Published Page URL</span>
-                <p class="font-mono text-xs text-white break-all" id="drawer-url-preview">https://cleo876.github.io/casbo/ledger/CASBO-2026-08-X17.html</p>
+                <p class="font-mono text-xs text-white break-all" id="drawer-url-preview">https://casboledger.cc/ledger/CASBO-2026-08-X17.html</p>
             </div>
 
             <!-- Recipient Laurel URL (Hero + WhatsApp/FB OG) -->
@@ -494,9 +494,12 @@
 
             <!-- Ledger JSON & Draft Actions -->
             <div class="pt-4 border-t border-white/10 space-y-3">
-                <span class="block font-mono text-[10px] text-gray-500 uppercase tracking-widest">Archive &amp; Project Tools</span>
+                <span class="block font-mono text-[10px] text-gray-500 uppercase tracking-widest">Auto-Indexing &amp; Drafts</span>
+                <p class="text-[11px] text-gray-400 leading-relaxed">
+                    Exported HTML files include an embedded <code class="text-white">casbo-record-meta</code> tag. Simply drop exported HTML files into <code class="text-white">/ledger/</code> and GitHub Actions will auto-update <code class="text-white">recipients.json</code>.
+                </p>
                 <button onclick="copyLedgerJSON()" class="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-display text-xs font-semibold tracking-widest uppercase text-white transition-colors">
-                    Copy JSON Entry for /ledger/recipients.json
+                    Copy Manual JSON Entry (Optional)
                 </button>
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="saveDraftJSON()" class="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 font-mono text-[11px] uppercase tracking-wider text-gray-300 transition-colors">
@@ -530,6 +533,8 @@
     </div>
 
     <script>
+        const SITE_DOMAIN = 'https://casboledger.cc';
+
         // ============================================================
         // 1. CENTRAL PAGE STATE
         // ============================================================
@@ -576,7 +581,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             syncAllHeroUI();
             renderAllBlocks();
-            // Close open insert menus when clicking outside
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.insert-divider')) {
                     if (openInsertIndex !== null) {
@@ -599,14 +603,14 @@
             state.meta.casboId = val.trim();
             document.getElementById('canvas-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
             document.getElementById('seal-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
-            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+            document.getElementById('drawer-url-preview').textContent = `${SITE_DOMAIN}/ledger/${getSafeSlug(state.meta.casboId)}.html`;
         }
 
         function syncCasboIdFromCanvas(val) {
             state.meta.casboId = val.trim();
             document.getElementById('top-casbo-id').value = state.meta.casboId;
             document.getElementById('seal-casbo-id').textContent = state.meta.casboId || 'CASBO-ID';
-            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+            document.getElementById('drawer-url-preview').textContent = `${SITE_DOMAIN}/ledger/${getSafeSlug(state.meta.casboId)}.html`;
         }
 
         function syncCompanyName(val) {
@@ -625,13 +629,11 @@
             document.getElementById('seal-company-name').textContent = state.meta.companyName;
             document.getElementById('canvas-seo-desc').textContent = state.meta.seoDesc;
 
-            // Drawer inputs
             document.getElementById('drawer-laurelUrl').value = state.meta.laurelUrl;
             document.getElementById('drawer-logoUrl').value = state.meta.logoUrl;
             document.getElementById('drawer-keywords').value = state.meta.keywords;
-            document.getElementById('drawer-url-preview').textContent = `https://cleo876.github.io/casbo/ledger/${getSafeSlug(state.meta.casboId)}.html`;
+            document.getElementById('drawer-url-preview').textContent = `${SITE_DOMAIN}/ledger/${getSafeSlug(state.meta.casboId)}.html`;
 
-            // Laurel Emblem
             const laurelEl = document.getElementById('canvas-laurel-img');
             if (state.meta.laurelUrl) {
                 laurelEl.style.backgroundImage = `url('${state.meta.laurelUrl.replace(/'/g, "\\'")}')`;
@@ -663,15 +665,11 @@
         // ============================================================
         // 3. ADAPTIVE ASPECT-RATIO BENTO LAYOUT ENGINE
         // ============================================================
-        // Groups images dynamically based on their natural aspect ratios so:
-        // - Portrait + 2 Landscapes morph into a true asymmetric 2-col Bento cluster
-        // - Rows of 2-3 images use flex-grow = naturalRatio so every tile shares
-        //   identical height while preserving 100% of its natural aspect ratio!
         function buildAdaptiveBentoHTML(items, blockIndex, isExport = false) {
             const validItems = isExport ? items.filter(i => i.url) : items;
             if (validItems.length === 0) return '';
 
-            const renderTile = (item, originalIdx, customStyle = '', isStacked = false) => {
+            const renderTile = (item, originalIdx, customStyle = '') => {
                 const src = item.url || 'https://placehold.co/900x600/0d0d0d/555555?text=Click+to+Set+Image+URL';
                 const ratio = item.ratio && item.ratio > 0 ? item.ratio : 1.5;
 
@@ -683,12 +681,8 @@
                         <button onclick="removeBentoTile(${blockIndex}, ${originalIdx})" class="px-1.5 py-1 rounded hover:bg-red-500/30 text-red-400 text-[10px]">&times;</button>
                     </div>`;
 
-                const onLoadAttr = isExport
-                    ? ''
-                    : `onload="captureBentoRatio(${blockIndex}, ${originalIdx}, this)"`;
-
-                // Preserve natural aspect ratio when stacked or solo
-                const imgWrapStyle = isStacked ? `aspect-ratio: ${ratio.toFixed(3)};` : `aspect-ratio: ${ratio.toFixed(3)};`;
+                const onLoadAttr = isExport ? '' : `onload="captureBentoRatio(${blockIndex}, ${originalIdx}, this)"`;
+                const imgWrapStyle = `aspect-ratio: ${ratio.toFixed(3)};`;
 
                 return `
                     <div class="bento-tile casbo-media-frame group" style="${customStyle}" data-ratio="${ratio.toFixed(3)}">
@@ -708,22 +702,12 @@
                 const item0 = validItems[i];
                 const r0 = item0.ratio || 1.5;
 
-                // Case 1: Single remaining item -> Full width, exact natural aspect ratio
-                if (remaining === 1) {
+                if (remaining === 1 || r0 >= 1.9) {
                     html += `<div class="bento-row">${renderTile(item0, i, 'flex: 1 1 100%;')}</div>`;
                     i += 1;
                     continue;
                 }
 
-                // Case 2: Ultra-wide panoramic image (ratio >= 1.9) -> Give it its own full-width hero row
-                if (r0 >= 1.9) {
-                    html += `<div class="bento-row">${renderTile(item0, i, 'flex: 1 1 100%;')}</div>`;
-                    i += 1;
-                    continue;
-                }
-
-                // Case 3: Asymmetric Bento Cluster! If we have >= 3 items and one is a Portrait (ratio <= 0.88)
-                // pair that tall portrait next to 2 stacked landscape/square tiles!
                 if (remaining >= 3) {
                     const group = [
                         { item: validItems[i], idx: i, r: validItems[i].ratio || 1.5 },
@@ -734,7 +718,6 @@
                     if (portraitPos !== -1) {
                         const tall = group[portraitPos];
                         const others = group.filter((_, idx) => idx !== portraitPos);
-                        // Compute proportional column widths so the tall tile height matches the 2 stacked tiles!
                         const stackedHeightRatio = (1 / others[0].r) + (1 / others[1].r);
                         const tallHeightRatio = 1 / tall.r;
                         const colRightWeight = stackedHeightRatio / (tallHeightRatio + stackedHeightRatio);
@@ -745,11 +728,10 @@
                         const tallTileHTML = renderTile(tall.item, tall.idx, 'height: 100%;');
                         const stackedHTML = `
                             <div class="bento-subcol">
-                                ${renderTile(others[0].item, others[0].idx, '', true)}
-                                ${renderTile(others[1].item, others[1].idx, '', true)}
+                                ${renderTile(others[0].item, others[0].idx, '')}
+                                ${renderTile(others[1].item, others[1].idx, '')}
                             </div>`;
 
-                        // Alternate left/right placement for visual rhythm
                         const portraitOnLeft = (i % 2 === 0);
                         const cols = portraitOnLeft ? `${leftFr}fr ${rightFr}fr` : `${rightFr}fr ${leftFr}fr`;
                         html += `
@@ -761,12 +743,10 @@
                     }
                 }
 
-                // Case 4: Standard Justified Bento Row of 2 (or 3 if all 3 are compact/square)
                 let take = 2;
                 if (remaining === 3) {
                     const r1 = validItems[i + 1].ratio || 1.5;
                     const r2 = validItems[i + 2].ratio || 1.5;
-                    // Put 3 in one row only if none are ultra-wide
                     if (r0 < 1.5 && r1 < 1.5 && r2 < 1.5) take = 3;
                 }
 
@@ -774,7 +754,6 @@
                 for (let k = 0; k < take; k++) {
                     const cur = validItems[i + k];
                     const curRatio = cur.ratio || 1.5;
-                    // Setting flex-grow to exact natural aspect ratio aligns row heights mathematically!
                     rowSlice.push(renderTile(cur, i + k, `flex: ${curRatio.toFixed(4)} 1 0%;`));
                 }
                 html += `<div class="bento-row">${rowSlice.join('')}</div>`;
@@ -790,7 +769,6 @@
             const naturalRatio = imgEl.naturalWidth / imgEl.naturalHeight;
             const item = state.blocks[blockIndex]?.items?.[tileIndex];
             if (!item) return;
-            // Re-morph Bento layout automatically if natural aspect ratio differs significantly
             if (!item.ratio || Math.abs(item.ratio - naturalRatio) > 0.04) {
                 item.ratio = Number(naturalRatio.toFixed(4));
                 renderAllBlocks();
@@ -828,7 +806,6 @@
             container.innerHTML = '';
             const isPreview = document.body.classList.contains('preview-mode');
 
-            // Top insertion point (Index 0)
             container.insertAdjacentHTML('beforeend', renderInsertDivider(0));
 
             state.blocks.forEach((block, index) => {
@@ -836,7 +813,6 @@
                 wrapper.className = 'editor-block p-2 sm:p-3 my-2';
                 wrapper.dataset.blockId = block.id;
 
-                // Compact Floating Action Bar (Hover/Focus Only)
                 const floatingBar = `
                     <div class="editor-only block-floating-bar flex flex-wrap items-center justify-between gap-2 mb-2.5 px-2.5 py-1.5 rounded-xl bg-[#0c0c0c]/95 border border-white/15 backdrop-blur-md">
                         <div class="flex items-center gap-1 flex-wrap">
@@ -917,8 +893,6 @@
 
                 wrapper.innerHTML = floatingBar + bodyHTML;
                 container.appendChild(wrapper);
-
-                // Insertion divider directly after this block
                 container.insertAdjacentHTML('beforeend', renderInsertDivider(index + 1));
             });
         }
@@ -949,7 +923,6 @@
             state.blocks.splice(pos, 0, newBlock);
             renderAllBlocks();
 
-            // Immediately prompt for URL if user inserted a Single Image
             if (type === 'image') {
                 openAssetModal('singleImage', pos);
             } else {
@@ -990,7 +963,6 @@
             renderAllBlocks();
         }
 
-        // Unified Asset Modal for Laurel, Logo, Website, Single Image, Bento Tile
         function openAssetModal(kind, blockIndex = null, tileIndex = null) {
             if (document.body.classList.contains('preview-mode')) return;
             activeAssetContext = { kind, blockIndex, tileIndex };
@@ -1144,7 +1116,7 @@
         }
 
         // ============================================================
-        // 7. 1:1 STANDALONE HTML EXPORT (SEO + WHATSAPP OG + BENTO)
+        // 7. 1:1 STANDALONE HTML EXPORT (AUTO-INDEXABLE + WHATSAPP OG)
         // ============================================================
         function exportStandaloneHTML() {
             const meta = state.meta;
@@ -1155,7 +1127,7 @@
             }
 
             const safeSlug = getSafeSlug(meta.casboId);
-            const canonicalUrl = `https://cleo876.github.io/casbo/ledger/${safeSlug}.html`;
+            const canonicalUrl = `${SITE_DOMAIN}/ledger/${safeSlug}.html`;
             const pageTitle = `${meta.companyName} | C.A.S.B.O Official Record (${meta.casboId})`;
             const keywords = `${meta.companyName}, ${meta.casboId}, C.A.S.B.O, Final Render Animation Studio, F.R.A.S, Forge, ${meta.month}, ${meta.keywords}`;
 
@@ -1194,6 +1166,17 @@
             const websiteCTA = (meta.websiteUrl && meta.websiteUrl !== '#')
                 ? `<a href="${escapeAttr(meta.websiteUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 font-display text-xs font-semibold tracking-[0.2em] uppercase text-white transition-all">Visit ${escapeHTML(meta.companyName)} &rarr;</a>`
                 : '';
+
+            // Machine-readable block read automatically by .github/workflows/build-ledger.yml
+            const casboRecordMeta = JSON.stringify({
+                badgeId: meta.casboId,
+                month: meta.month,
+                name: meta.companyName,
+                logoUrl: meta.logoUrl || null,
+                laurelUrl: meta.laurelUrl,
+                description: meta.seoDesc,
+                link: meta.websiteUrl || '#'
+            }, null, 2);
 
             const jsonLd = JSON.stringify({
                 "@context": "https://schema.org",
@@ -1244,6 +1227,11 @@
     <meta name="twitter:title" content="${escapeAttr(pageTitle)}">
     <meta name="twitter:description" content="${escapeAttr(meta.seoDesc)}">
     <meta name="twitter:image" content="${escapeAttr(meta.laurelUrl)}">
+
+    <!-- Auto-Indexer Metadata for GitHub Actions (Do Not Remove) -->
+    <script id="casbo-record-meta" type="application/json">
+${casboRecordMeta}
+    <\/script>
 
     <!-- Structured Data for Google Company Indexing -->
     <script type="application/ld+json">
@@ -1394,7 +1382,7 @@ ${jsonLd}
 </html>`;
 
             triggerDownload(`${safeSlug}.html`, fullHTML, 'text/html');
-            showToast(`Exported ${safeSlug}.html — upload to /ledger/`, 'success');
+            showToast(`Exported ${safeSlug}.html — drop into /ledger/ to auto-update JSON!`, 'success');
         }
 
         // ============================================================
